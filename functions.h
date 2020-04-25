@@ -4,6 +4,8 @@
 typedef struct token{
     char name[100];
     char type[20];
+    int lineno;
+    int colno;
     struct token *next;
 }lexeme;
 
@@ -19,7 +21,7 @@ int hash(char* a) // hash function using chaining
     return sum%100;
 }
 
-void insert(char* s)    // insert new entry in symbol table
+void insert(char* s,int line,int col,char* type)    // insert new entry in symbol table
 {
     int ind = hash(s);
     lexeme *newToken = (lexeme*)malloc(sizeof(lexeme));
@@ -30,6 +32,11 @@ void insert(char* s)    // insert new entry in symbol table
     else
     {
         lexeme *cur = symbolTable[ind];
+        strcpy(cur->name,s);
+        strcpy(cur->type,type);
+        cur->lineno = line;
+        cur->colno = col;
+
         while(cur->next!=NULL)
             cur = cur->next;
 
@@ -54,11 +61,11 @@ int lookup(char* s)
     return 0;
 }
 
-void delete()
-{
-    //lookup()
+// void delete()
+// {
+//     //lookup()
 
-}
+// }
 void clearSymbolTable()  // free space allocated to  symbol table
 {
     // for (int i = 0; i < 100; i++)
