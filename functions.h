@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h> 
 
@@ -20,36 +21,13 @@ int hash(char* a) // hash function using chaining
     }
     return sum%100;
 }
-
-void insert(char* s,int line,int col,char* type)    // insert new entry in symbol table
-{
-    int ind = hash(s);
-    lexeme *newToken = (lexeme*)malloc(sizeof(lexeme));
-    if(symbolTable[ind] == NULL)
-    {
-        symbolTable[ind] = newToken;
-    }
-    else
-    {
-        lexeme *cur = symbolTable[ind];
-        strcpy(cur->name,s);
-        strcpy(cur->type,type);
-        cur->lineno = line;
-        cur->colno = col;
-
-        while(cur->next!=NULL)
-            cur = cur->next;
-
-        cur->next = newToken;
-    }
-}
 int lookup(char* s)
 {
     int ind = hash(s);
     if(symbolTable[ind] != NULL)
     {
         lexeme *cur = symbolTable[ind];
-        while(cur->next!=NULL)
+        while(cur!=NULL)
         {
             if(!strcmp(cur->name,s))
             {
@@ -61,6 +39,34 @@ int lookup(char* s)
     return 0;
 }
 
+void insert(char* s,int line,int col,char* type)    // insert new entry in symbol table
+{
+    int ind = hash(s);
+    if(!lookup(s))
+    {
+        lexeme *newToken = (lexeme*)malloc(sizeof(lexeme));
+        strcpy(newToken->name,s);
+        strcpy(newToken->type,type);
+        newToken->lineno = line;
+        newToken->colno = col;
+        if(symbolTable[ind] == NULL)
+        {
+            
+                symbolTable[ind] = newToken;
+        }
+        else
+        {
+            lexeme *cur = symbolTable[ind];
+            while(cur->next!=NULL)
+                cur = cur->next;
+
+            cur->next = newToken;
+        }
+    }
+}
+
+
+
 // void delete()
 // {
 //     //lookup()
@@ -68,17 +74,37 @@ int lookup(char* s)
 // }
 void clearSymbolTable()  // free space allocated to  symbol table
 {
-    // for (int i = 0; i < 100; i++)
-    // {
-    //     if(symbolTable[i]!=NULL)
-    //     {
-    //         lexeme *cur = symbolTable[i];
-    //         while(cur->next!=NULL)
-    //             cur = cur->next;
-    //     }
-
+    for (int i = 0; i < 100; i++)
+    {
+        if(symbolTable[i]!=NULL)
+        {
+            lexeme *cur = symbolTable[i];
+            lexeme *prev = NULL;
+            while(cur!=NULL)
+            {
+                prev = cur;
+                cur = cur->next;
+                free(prev);
+            }
+        }
+    }
+}
+void printSymbolTable()  // a
+{
+    for (int i = 0; i < 100; i++)
+    {
         
-    // }
-    
-
+        if(symbolTable[i]!=NULL)
+        {
+            printf("%d\n",i);
+            lexeme *cur = symbolTable[i];
+            while(cur!=NULL)
+            {
+                printf("\nname = %s\ntype = %s\nline %d\tcol %d\n",cur->name,cur->type,cur->lineno,cur->colno);
+                cur = cur->next;
+            }
+            printf("\n");
+        }
+        
+    }
 }
