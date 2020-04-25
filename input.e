@@ -1,13 +1,9 @@
 
 class PERSON
  
-create
-    make
- 
 feature   -- Initialization
- 
-    make (n: STRING)
-          -- Create with name 'n'.
+ make (n: STRING)
+           Create with name 'n'.
         require
             name_exists: not n.is_empty
         do
@@ -17,8 +13,7 @@ feature   -- Initialization
         ensure
             name_set: name = n
         end
- 
-feature   -- Status
+    feature   -- Status
  
     name: STRING
  
@@ -33,7 +28,7 @@ feature   -- Status
         ensure
             personal_code_correct: Result ~ (name + age.out)
         end
- 
+
 feature  -- Setters
  
     set_age  (n: STRING)
@@ -67,3 +62,6 @@ feature  -- Setters
             one_more_language: known_programming_languages.count = old known_programming_languages.count + 1
         end
 end
+ 
+
+ 

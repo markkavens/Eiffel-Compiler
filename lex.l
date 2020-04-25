@@ -1,10 +1,31 @@
 %option noyywrap
 %{
-	#include<stdio.h>
+	#include <string.h>
+	#include <stdlib.h>
+	#include "uthash.h" 
+
+	typedef struct {
+		int line_no;
+		int col_no;
+		char type[100];
+	} Content;
+
+	typedef struct token{
+		char val[100];      /* Key */
+		Content* content;
+		UT_hash_handle hh;
+	} Lexeme;
+
+	void addHashUtil(char* yytext, char* type, int line, int col);
+	void addHash(char* type, int line_no, char* value, int col_no);
+	Lexeme* findHash(char* str);
+	void printHash();
+
+	Lexeme* lexemes = NULL;  /* hash array */
 	int line=1, col=1;
 %}
 
-keyword					 feature|class|do|end|alias|assign|once|inherit|redefine|if|create|else|require|ensure|local|invariant|Result|then|elseif|old|io.new_line|from|until|loop|across|as|create|NONE|Void|implies|note|description|author|NULL|local|Current|extend
+keyword					 feature|class|do|end|alias|assign|once|inherit|redefine|if|create|else|require|ensure|local|invariant|Result|then|elseif|old|io.new_line|from|until|loop|across|as|create|NONE|Void|implies|note|description|author|NULL|local|Current|extend|compare_objects|is_empty|out|make
 predefined_types			 INTEGER|STRING|REAL|BOOLEANDOUBLE|ARRAYED_LIST|CHARACTER
 identifier				 [a-zA-Z][a-zA-Z0-9\_]*
 zero					 0
@@ -28,60 +49,100 @@ operator 				 ":="|"="|"/="|"//"|"\\"|"^"|".."|"|..|"|{comparisonOperators}|{mat
 comment					 [-][-](.)*
 
 %%
-{keyword}			{
-					printf(" %s %s ", " Keyword", yytext);
-					col += yyleng;
-				}
-{function}			{
-					printf(" %s %s ", "Function", yytext);
-					col += yyleng;
-				}
+{keyword}				{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Keyword", line, col);
+							col += yyleng;
+						}
+{predefined_types}		{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Predefined Type", line, col);
+							col += yyleng;
+						}
+{function}				{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Function", line, col);
+							col += yyleng;
+						}
 {specialOperator}		{
-					printf(" %s %s ", "Special Operator", yytext);
-					col += yyleng;
-				}
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Special Operator", line, col);
+							col += yyleng;
+						}
 {identifier}			{
-					printf(" %s %s ", "Identifier", yytext);
-					col += yyleng;
-				}
-{integer}			{
-					printf(" %s %s ", "Integer", yytext);
-					col += yyleng;
-				}
-{real}				{
-					printf(" %s %s ", "Real", yytext);
-					col += yyleng;
-				}
-{string}			{
-					printf(" %s %s ", "String", yytext);
-					col += yyleng;
-				}
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Identifier", line, col);
+							col += yyleng;
+						}
+{integer}				{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Integer", line, col);
+							col += yyleng;
+						}
+{real}					{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Real No.", line, col);
+							col += yyleng;
+						}
+{string}				{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "String", line, col);
+							col += yyleng;
+						}
 {whitespace}			{
-					/*printf(" %s %s ", "WhiteSpace", yytext);*/
-					col += yyleng;
-				}
-{newline}			{
-					/*printf(" %s %s ", "NewLine", yytext);*/
-					printf("\n");
-					line++;
-					col=1;	
-				}
-{delimiter}			{
-					printf(" %s %s ", "Delimiter", yytext);
-					col += yyleng;
-				}
-{operator}			{
-					printf(" %s %s ", "Operator", yytext);
-					col += yyleng;
-				}
-{comment}			{
-					printf(" %s %s ", "Comment", yytext);
-					col += yyleng;
-				}
-[\.]				{
-					printf(" %s %s ", "Dot", yytext);
-				}
+							col += yyleng;
+						}
+{newline}				{
+							line++;
+							col=1;
+						}
+{delimiter}				{
+							col += yyleng;
+						}
+{operator}				{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Operator", line, col);
+							col += yyleng;
+						}
+{comment}				{
+							// printf("%s\n", yytext);
+							addHashUtil(yytext, "Comment", line, col);
+							col += yyleng;
+						}
+[\.]					{
+							col += yyleng;
+						}
+[:]						{
+							printf("");
+						}
 %%
+
+void addHashUtil(char* yytext, char* type, int line, int col) {
+    Lexeme* temp = (Lexeme*)malloc(sizeof(Lexeme));
+    temp = findHash(yytext);
+    if(temp == NULL)
+        addHash(type, line, yytext, col);
+}
+
+void addHash(char* type, int line_no, char* value, int col_no) {
+    Lexeme* temp = (Lexeme*)malloc(sizeof(Lexeme));
+	// temp->val = value;
+	strcpy(temp->val, value);
+    temp->content = (Content*)malloc(sizeof(Content));
+    temp->content->line_no = line_no;
+    temp->content->col_no = col_no;
+    // temp->content->type = type;
+	strcpy(temp->content->type, type);
+    HASH_ADD_KEYPTR(hh, lexemes, temp->val, strlen(temp->val), temp);
+	printf("%s with value \'%s\' found in line %d at column %d\n", temp->content->type, temp->val, temp->content->line_no, temp->content->col_no);
+    free(temp);
+}
+
+Lexeme* findHash(char* str) {
+    Lexeme* temp = (Lexeme*)malloc(sizeof(Lexeme));
+    HASH_FIND_STR(lexemes, str, temp);
+    return temp;
+}
 
 int main() {
 	yylex();
