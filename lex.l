@@ -1,6 +1,6 @@
 %option noyywrap
 %{
-	#include<stdio.h>
+	#include "functions.h"
 	int line=1, col=1;
 %}
 
@@ -41,6 +41,7 @@ comment					 [-][-](.)*
 					}
 {identifier}		{
 						printf("%d\t%d\t%30s%20s\n",line,col,yytext, "Identifier");
+						insert(yytext,line,col,"Identifier");
 						col += yyleng;
 					}
 {integer}			{
@@ -83,12 +84,18 @@ comment					 [-][-](.)*
 %%
 
 int main() {
+	
+	printf("%s\t%s\t%30s%20s\n","LineNo","ColNo","Token", "Type");
+	printf("%s\t%s\t%30s%20s\n","---","---","-------", "-------");
 	FILE *fp; 
 	char filename[50]; 
 	
 	fp = fopen("input.e","r"); 
 	yyin = fp;
 	yylex();
+
+	printSymbolTable();
+	clearSymbolTable();
 	return 0;
 
 
