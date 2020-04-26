@@ -20,6 +20,7 @@
 	void addHash(char* type, int line_no, char* value, int col_no);
 	Lexeme* findHash(char* str);
 	void printHash();
+	void printLines();
 
 	Lexeme* lexemes = NULL;  /* hash array */
 	int line=1, col=1;
@@ -61,6 +62,7 @@ comment					 [-][-](.)*
 						}
 {function}				{
 							// printf("%s\n", yytext);
+							strtok(yytext, "(");
 							addHashUtil(yytext, "Function", line, col);
 							col += yyleng;
 						}
@@ -134,7 +136,9 @@ void addHash(char* type, int line_no, char* value, int col_no) {
     // temp->content->type = type;
 	strcpy(temp->content->type, type);
     HASH_ADD_KEYPTR(hh, lexemes, temp->val, strlen(temp->val), temp);
-	printf("%s with value \'%s\' found in line %d at column %d\n", temp->content->type, temp->val, temp->content->line_no, temp->content->col_no);
+	// printf("%s with value \'%s\' found in line %d at column %d\n", temp->content->type, temp->val, temp->content->line_no, temp->content->col_no);
+	printf("%10s|%10d\t|\t%5d\t|\t%-50s\t|\t%-20s|\n"," ", line, col, yytext, type);
+	printLines();
     free(temp);
 }
 
@@ -144,7 +148,34 @@ Lexeme* findHash(char* str) {
     return temp;
 }
 
+void printLines() {
+	for(int i=0;i<133;i++) {
+		if(i<10) {
+			printf(" ");
+			continue;
+		}
+		printf("-");
+	}
+	printf("\n");
+}
+
+void printLinesUnderScore() {
+	for(int i=0;i<133;i++) {
+		if(i<10) {
+			printf(" ");
+			continue;
+		}
+		printf("_");
+	}
+	printf("\n");
+}
+
 int main() {
+	printLinesUnderScore();
+	printLines();
+	printf("%10s|%10s\t|\t%5s\t|\t%-50s\t|\t%-20s|\n", " ", "LineNo", "ColNo", "Token", "Type");
+	printLinesUnderScore();
+	printLines();
 	yylex();
 	return 0;
 }

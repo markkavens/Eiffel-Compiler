@@ -822,10 +822,11 @@ char *yytext;
 	void addHash(char* type, int line_no, char* value, int col_no);
 	Lexeme* findHash(char* str);
 	void printHash();
+	void printLines();
 
 	Lexeme* lexemes = NULL;  /* hash array */
 	int line=1, col=1;
-#line 829 "lex.yy.c"
+#line 830 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -976,9 +977,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 51 "lex.l"
+#line 52 "lex.l"
 
-#line 982 "lex.yy.c"
+#line 983 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -1063,7 +1064,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 52 "lex.l"
+#line 53 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
@@ -1072,7 +1073,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 57 "lex.l"
+#line 58 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Predefined Type", line, col);
@@ -1081,16 +1082,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 62 "lex.l"
+#line 63 "lex.l"
 {
 							// printf("%s\n", yytext);
+							strtok(yytext, "(");
 							addHashUtil(yytext, "Function", line, col);
 							col += yyleng;
 						}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 67 "lex.l"
+#line 69 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Special Operator", line, col);
@@ -1099,7 +1101,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 72 "lex.l"
+#line 74 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Identifier", line, col);
@@ -1108,7 +1110,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 77 "lex.l"
+#line 79 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Integer", line, col);
@@ -1117,7 +1119,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 82 "lex.l"
+#line 84 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Real No.", line, col);
@@ -1126,7 +1128,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 87 "lex.l"
+#line 89 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "String", line, col);
@@ -1135,14 +1137,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 92 "lex.l"
+#line 94 "lex.l"
 {
 							col += yyleng;
 						}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 95 "lex.l"
+#line 97 "lex.l"
 {
 							line++;
 							col=1;
@@ -1150,14 +1152,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 99 "lex.l"
+#line 101 "lex.l"
 {
 							col += yyleng;
 						}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 102 "lex.l"
+#line 104 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Operator", line, col);
@@ -1166,7 +1168,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 107 "lex.l"
+#line 109 "lex.l"
 {
 							// printf("%s\n", yytext);
 							addHashUtil(yytext, "Comment", line, col);
@@ -1175,24 +1177,24 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 112 "lex.l"
+#line 114 "lex.l"
 {
 							col += yyleng;
 						}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 115 "lex.l"
+#line 117 "lex.l"
 {
 							printf("");
 						}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 118 "lex.l"
+#line 120 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1196 "lex.yy.c"
+#line 1198 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2078,7 +2080,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 118 "lex.l"
+#line 120 "lex.l"
 
 
 void addHashUtil(char* yytext, char* type, int line, int col) {
@@ -2098,7 +2100,9 @@ void addHash(char* type, int line_no, char* value, int col_no) {
     // temp->content->type = type;
 	strcpy(temp->content->type, type);
     HASH_ADD_KEYPTR(hh, lexemes, temp->val, strlen(temp->val), temp);
-	printf("%s with value \'%s\' found in line %d at column %d\n", temp->content->type, temp->val, temp->content->line_no, temp->content->col_no);
+	// printf("%s with value \'%s\' found in line %d at column %d\n", temp->content->type, temp->val, temp->content->line_no, temp->content->col_no);
+	printf("%10s|%10d\t|\t%5d\t|\t%-50s\t|\t%-20s|\n"," ", line, col, yytext, type);
+	printLines();
     free(temp);
 }
 
@@ -2108,7 +2112,34 @@ Lexeme* findHash(char* str) {
     return temp;
 }
 
+void printLines() {
+	for(int i=0;i<133;i++) {
+		if(i<10) {
+			printf(" ");
+			continue;
+		}
+		printf("-");
+	}
+	printf("\n");
+}
+
+void printLinesUnderScore() {
+	for(int i=0;i<133;i++) {
+		if(i<10) {
+			printf(" ");
+			continue;
+		}
+		printf("_");
+	}
+	printf("\n");
+}
+
 int main() {
+	printLinesUnderScore();
+	printLines();
+	printf("%10s|%10s\t|\t%5s\t|\t%-50s\t|\t%-20s|\n", " ", "LineNo", "ColNo", "Token", "Type");
+	printLinesUnderScore();
+	printLines();
 	yylex();
 	return 0;
 }
