@@ -1,0 +1,65 @@
+program: class_declaration
+       ;
+
+class_declaration: CLASS IDENTIFIER inside_class END
+		 ;
+
+inside_class: create_declaration
+	    | (epsilon)
+	    ;
+
+create_declaration: CREATE IDENTIFIER features_declaration
+		  ;
+
+features_declaration: feature_declaration features_declaration
+		    | (epsilon)
+		    ;
+
+feature_declaration: FEATURE inside_feature
+		   ;
+
+inside_feature: variables_declarations inside_feature
+	      | functions_implemenations inside_feature
+	      | (epsilon)
+	      ;
+	
+functions_implementations: function_implementation functions_implementations
+		         | (epsilon)
+		      	 ;
+
+function_implementation: FUNCTION inside_function
+		       ;
+	
+inside_function: DO --- END
+	       ;
+
+local_declaration: LOCAL variables_declaration
+		 ;
+
+variables_declaration: variable_declaration variables_declaration
+		     | (epsilon)
+		     ;
+
+datatype: INTEGER
+	| REAL
+	| STRING
+	| ARRAYED_LIST[datatype]
+	;
+
+literals: integer_literal
+	| real_literal
+	| string literal
+	;
+
+string_literal: STRING
+	      ;
+
+real_literal: REAL
+	    ;
+
+integer_literal: INTEGER
+	       ;
+
+contracts_declaration: IDENTIFIER COLON expr contracts_sec
+		     | (epsilon)
+		     ;
