@@ -65,26 +65,53 @@ contracts_declaration: IDENTIFIER COLON expr contracts_sec
 		     ;
 
 
-////////////// to be completed
+////////////// 
 
 condition:
-if-condition elseif-condition else-condition END {printf("done");}
+prog:code_part {puts("success");}
+;
+
+code_part:code  
+|code code_part
+;
+
+code :
+|condition
+|STRING
+;
+
+condition:
+if-condition elseif-condition else-condition END 
 ;
 
 if-condition:
-IF NUM THEN NUM 
+IF statement THEN code_part
 ;
 
 elseif-condition:
-|elseif-condition ELSEIF NUM THEN NUM 
+|elseif-condition ELSEIF statement THEN code_part 
 ;
 
 else-condition:
-|ELSE NUM
+|ELSE code_part
 ;
 
 statement:
 IDENTIFIER comparison_symbol IDENTIFIER
-|IDENTIFIER comparison_symbol literal
+|IDENTIFIER comparison_symbol literal 
 |literal comparison_symbol IDENTIFIER
 |literal comparison_symbol literal
+;
+
+comparison_symbol:GT
+|GTEQ
+|LT
+|LTEQ
+;
+
+literal: 
+INTEGER
+|REAL
+|STRING
+;
+

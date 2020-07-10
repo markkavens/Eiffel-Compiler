@@ -12,6 +12,7 @@
 %token COLON
 %token DATATYPE
 %token IF THEN ELSEIF ELSE
+%token GTEQ LT LTEQ GT NOT
 
 %%
 
@@ -42,6 +43,55 @@ inside_feature:
 variable_declaration: IDENTIFIER COLON DATATYPE
                     ;
 
+
+
+prog:code_part {  // start symbol of if
+  puts("success");}
+;
+
+code_part:code  
+|code code_part
+;
+
+code :
+|condition
+|STRING
+;
+
+condition:
+if-condition elseif-condition else-condition END 
+;
+
+if-condition:
+IF statement THEN code_part
+;
+
+elseif-condition:
+|elseif-condition ELSEIF statement THEN code_part 
+;
+
+else-condition:
+|ELSE code_part
+;
+
+statement:
+IDENTIFIER comparison_symbol IDENTIFIER
+|IDENTIFIER comparison_symbol literal 
+|literal comparison_symbol IDENTIFIER
+|literal comparison_symbol literal
+;
+
+comparison_symbol:GT
+|GTEQ
+|LT
+|LTEQ
+;
+
+literal: 
+INTEGER
+|REAL
+|STRING
+;
 
 
 

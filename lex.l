@@ -68,6 +68,12 @@ feature			{yylval = line; return FEATURE;}
 
 "elseif"		{return (ELSEIF);}
 
+"<"				{return (LT);}				
+">"				{return (GT);}
+"<="			{return (LTEQ);}
+">="			{return (GTEQ);}
+"~"				{return (NOT);}
+
 {keyword}				{
 						// printf("%s\n", yytext);
 						addHashUtil(yytext, "Keyword", line, col);
