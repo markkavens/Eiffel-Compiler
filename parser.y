@@ -11,6 +11,7 @@
 %token DO END
 %token COLON
 %token DATATYPE
+%token IF THEN ELSEIF ELSE
 
 %%
 
@@ -40,6 +41,9 @@ inside_feature:
 
 variable_declaration: IDENTIFIER COLON DATATYPE
                     ;
+
+
+
 
 %%
 

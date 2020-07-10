@@ -63,3 +63,28 @@ integer_literal: INTEGER
 contracts_declaration: IDENTIFIER COLON expr contracts_sec
 		     | (epsilon)
 		     ;
+
+
+////////////// to be completed
+
+condition:
+if-condition elseif-condition else-condition END {printf("done");}
+;
+
+if-condition:
+IF NUM THEN NUM 
+;
+
+elseif-condition:
+|elseif-condition ELSEIF NUM THEN NUM 
+;
+
+else-condition:
+|ELSE NUM
+;
+
+statement:
+IDENTIFIER comparison_symbol IDENTIFIER
+|IDENTIFIER comparison_symbol literal
+|literal comparison_symbol IDENTIFIER
+|literal comparison_symbol literal

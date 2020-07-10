@@ -52,13 +52,21 @@ comment					 [-][-](.)*
 
 %%
 
-class {yylval = line; return CLASS;}
+class			{yylval = line; return CLASS;}
 
-create {yylval = line; return CREATE;}
+create			{yylval = line; return CREATE;}
 
-end {yylval = line; return END;}
+end				{yylval = line; return END;}
 
-feature {yylval = line; return FEATURE;}
+feature			{yylval = line; return FEATURE;}
+
+"if"			{return (IF);}
+
+"then"			{return (THEN);}
+
+"else"			{return (ELSE);}
+
+"elseif"		{return (ELSEIF);}
 
 {keyword}				{
 						// printf("%s\n", yytext);
