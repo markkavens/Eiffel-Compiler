@@ -21,9 +21,6 @@
 %token AND OR XOR NOT
 %token PRINT
 
-%glr-parser
-%expect-rr 13
-
 %%
 /* Complete Program */
 program: class_declaration
@@ -244,6 +241,7 @@ variant_contracts: VARIANT contracts_expressions
 /* contracts expressions */
 contracts_expressions: IDENTIFIER COLON statement
                      | statement
+                     | arithmetic_exp
                      ;
 
 /* Possible expressions */
@@ -302,11 +300,11 @@ arithmetic_factor: IDENTIFIER
 
 int main() {
   yyparse();
-  printf("Syntactically Correct\n");
+  printf("\n\t\tSyntactically Correct\n\n");
   return 0;
 }
 
 void yyerror(char* s) {
-  printf("Error: at line %d at %d, %s\n", yylval, col, s);
+  printf("\n\t\tError: at line %d:%d, %s\n\n", yylval, col, s);
   exit(0);
 }

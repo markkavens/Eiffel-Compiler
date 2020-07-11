@@ -1,6 +1,17 @@
+--------------------------------------------------------
+--Error in file
+--------------------------------------------------------
+--line 31: no 'then' after 3>5
+--line 53: spelling mistake in boolean
+--line 56: it should be x := y
+--line end: 'end' must be present at the end of loop (after line 71)
+--------------------------------------------------------
+--------------------------------------------------------
+
+
 class APPLICATION
 	create
-		make1
+		make
 	feature
 		i: STRING
 		j: INTEGER
@@ -13,59 +24,67 @@ class APPLICATION
 		do
 			inspect 2<3
 				when 2 then
-					x: boolean
+					x:=y
 				when 3, 4 then
-					y: real
-					z: real
-					if 3>5 then 
-						x: real
+					z:=45
+					if 3>5
+						from i := 0
+						until i <= 10
+						loop
+							x := i
+						end
 					else
-						_t: integer
+						_t:=(false or true and true)
 					END
 				when 2..4 then
-					s: real
+					s:=i
 				else
-					s: real
+					s:=x
 			end
-			t: boolean
+			x := (false xor true or true and false)
+		end
+		fun(x: real):double
+		do
+			temp := "Hello"
 		end
 
 	feature
 		n: REAL
-		q: REAL
+		q(x: integer; i:real y: boolaen)
 		do
-			if 3<4 then
-				x: integer
-			elseif 4<3 then
-				x: boolean
+			if "hello" < "world" then
+				x=y
+			elseif true = false then
+				x :="world" 
 			else
-				x: double
+				x := "hello"
 			end
 			from
-				x:=3
+				x := 3
+				x := h
 			until
 				i > 5
 			loop
-				he: boolean
+				lang:="Eiffel"
 				if 4<5 then
-					b: boolean
+					is_correct := "yes"
 				end
-			end
 
-			frm x:=3
-				x:=h
+			from 
+				i := 3
+				x := i
 			invariant
 				x > 6
 			until 
 				i >= 10
 			loop
 				if 3<4 then 
-					x : boolean
+					x := (-a+b*(c*5/(-5))/f-3)+8*(-45)
 				else
-					d: real
+					d := (true or temp xor (false and bool_temp or false) and false)
 				end
 			variant 
-				n < 4
+				x - i
 			end
 		end
 end

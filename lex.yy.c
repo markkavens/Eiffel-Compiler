@@ -955,7 +955,6 @@ case 1:
 YY_RULE_SETUP
 #line 52 "lex.l"
 {
-							printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -964,9 +963,8 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 59 "lex.l"
+#line 58 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -975,9 +973,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 66 "lex.l"
+#line 64 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -986,9 +983,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 73 "lex.l"
+#line 70 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -997,9 +993,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 80 "lex.l"
+#line 76 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1008,9 +1003,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 87 "lex.l"
+#line 82 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1019,9 +1013,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 94 "lex.l"
+#line 88 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Function", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1030,9 +1023,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 101 "lex.l"
+#line 94 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1041,9 +1033,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 108 "lex.l"
+#line 100 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1052,9 +1043,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 115 "lex.l"
+#line 106 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1063,9 +1053,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 122 "lex.l"
+#line 112 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1074,9 +1063,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 129 "lex.l"
+#line 118 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Operator", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1085,9 +1073,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 136 "lex.l"
+#line 124 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1096,9 +1083,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 143 "lex.l"
+#line 130 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1107,9 +1093,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 150 "lex.l"
+#line 136 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1118,9 +1103,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 157 "lex.l"
+#line 142 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1129,9 +1113,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 164 "lex.l"
+#line 148 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Operator", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1140,9 +1123,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 171 "lex.l"
+#line 154 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Operator", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1151,9 +1133,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 178 "lex.l"
+#line 160 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1162,9 +1143,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 185 "lex.l"
+#line 166 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1173,9 +1153,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 192 "lex.l"
+#line 172 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1184,9 +1163,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 199 "lex.l"
+#line 178 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Mathematical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1195,9 +1173,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 206 "lex.l"
+#line 184 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Mathematical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1206,9 +1183,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 213 "lex.l"
+#line 190 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Mathematical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1217,9 +1193,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 220 "lex.l"
+#line 196 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Mathematical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1228,9 +1203,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 227 "lex.l"
+#line 202 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Logical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1239,9 +1213,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 234 "lex.l"
+#line 208 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Boolean Literal", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1250,9 +1223,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 241 "lex.l"
+#line 214 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Logical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1261,9 +1233,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 248 "lex.l"
+#line 220 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Logical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1272,9 +1243,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 255 "lex.l"
+#line 226 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Logical Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1283,9 +1253,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 262 "lex.l"
+#line 232 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Comparison Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1294,9 +1263,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 269 "lex.l"
+#line 238 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Comparison Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1305,9 +1273,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 276 "lex.l"
+#line 244 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Comparison Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1316,9 +1283,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 283 "lex.l"
+#line 250 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Comparison Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1327,9 +1293,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 290 "lex.l"
+#line 256 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Delimiters", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1338,9 +1303,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 297 "lex.l"
+#line 262 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Delimiters", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1349,9 +1313,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 304 "lex.l"
+#line 268 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Delimiters", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1360,9 +1323,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 311 "lex.l"
+#line 274 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Delimiters", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1371,9 +1333,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 318 "lex.l"
+#line 280 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Delimiters", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1382,9 +1343,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 325 "lex.l"
+#line 286 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Operators", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1393,9 +1353,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 332 "lex.l"
+#line 292 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Integer", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1404,9 +1363,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 339 "lex.l"
+#line 298 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Real No.", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1416,9 +1374,8 @@ printf("%s ", yytext);
 case 43:
 /* rule 43 can match eol */
 YY_RULE_SETUP
-#line 346 "lex.l"
+#line 304 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "String", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1427,9 +1384,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 353 "lex.l"
+#line 310 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Keyword", line, col);
 							yylval = line;
 							col += yyleng;
@@ -1438,9 +1394,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 360 "lex.l"
+#line 316 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Predefined Type", line, col);
 							yylval = line;
 							col += yyleng;
@@ -1449,9 +1404,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 367 "lex.l"
+#line 322 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Special Operator", line, col);
 							yylval = line;
 							col += yyleng;
@@ -1459,9 +1413,8 @@ printf("%s ", yytext);
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 373 "lex.l"
+#line 327 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Identifier", line, col);
 							col += yyleng;
 							yylval = line;
@@ -1470,7 +1423,7 @@ printf("%s ", yytext);
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 380 "lex.l"
+#line 333 "lex.l"
 {
 							col += yyleng;
 						}
@@ -1478,7 +1431,7 @@ YY_RULE_SETUP
 case 49:
 /* rule 49 can match eol */
 YY_RULE_SETUP
-#line 383 "lex.l"
+#line 336 "lex.l"
 {
 							line++;
 							col=1;
@@ -1486,24 +1439,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 387 "lex.l"
+#line 340 "lex.l"
 {
-printf("%s ", yytext);
 							col += yyleng;
 						}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 391 "lex.l"
+#line 343 "lex.l"
 {
-printf("%s ", yytext);
 							addHashUtil(yytext, "Operator", line, col);
 							col += yyleng;
 						}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 396 "lex.l"
+#line 347 "lex.l"
 {
 							addHashUtil(yytext, "Comment", line, col);
 							col += yyleng;
@@ -1511,17 +1462,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 400 "lex.l"
+#line 351 "lex.l"
 {
 							col += yyleng;
 						}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 403 "lex.l"
+#line 354 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1525 "lex.yy.c"
+#line 1476 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2526,7 +2477,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 403 "lex.l"
+#line 354 "lex.l"
 
 
 void addHashUtil(char* yytext, char* type, int line, int col)

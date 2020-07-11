@@ -1,6 +1,14 @@
+--------------------------------------------
+--------------------------------------------
+--------Eiffel is case-insensitive----------
+--integer, inTEGer, INTEGER are all same----
+--------------------------------------------
+--------------------------------------------
+
+
 class APPLICATION
 	create
-		make1
+		make
 	feature
 		i: STRING
 		j: INTEGER
@@ -11,6 +19,7 @@ class APPLICATION
 		m: INTEGER
 		func:boolean
 		do
+			print("Hello" + yourname + "! Hope allwell")
 			inspect 2<3
 				when 2 then
 					x:=y
@@ -32,32 +41,40 @@ class APPLICATION
 			end
 			x := (false xor true or true and false)
 		end
+		fun(x: real):double
+		do
+			temp := "Hello"
+		end
 
 	feature
 		n: REAL
-		q: REAL
+		q(x: integer; i:real y: boolean)
+		local
+			j: integer
+			k: boolean
 		do
-			if "hello" < "you" then
+			if "hello" < "world" then
 				x:=y
 			elseif true = false then
-				x :="hello" 
+				x :="world" 
 			else
-				x:=r
+				x := "hello"
 			end
 			from
-				x:=3
-				x:=h
+				x := 3
+				x := h
 			until
 				i > 5
 			loop
-				he:="yup"
+				lang:="Eiffel"
 				if 4<5 then
-					b:="no"
+					is_correct := "yes"
 				end
 			end
 
-			from x:=3
-				x:=h
+			from 
+				i := 3
+				x := i
 			invariant
 				x > 6
 			until 
@@ -66,10 +83,10 @@ class APPLICATION
 				if 3<4 then 
 					x := (-a+b*(c*5/(-5))/f-3)+8*(-45)
 				else
-					d := (true or temp xor (false and de or false) and false)
+					d := (true or temp xor (false and bool_temp or false) and false)
 				end
 			variant 
-				n < 4
+				x - i
 			end
 		end
 end
