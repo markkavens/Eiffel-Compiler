@@ -23,7 +23,7 @@ class APPLICATION
 							x := i
 						end
 					else
-						_t:=(false or true and t)
+						_t:=(false or true and true)
 					END
 				when 2..4 then
 					s:=i

@@ -6,12 +6,10 @@
   extern int col;
 %}
 
-%nonassoc shift
-
 %token INTEGER REAL STRING ARRAYED_LIST BOOLEAN CHARACTER DOUBLE
 %token OP CP OSB CSB COLON SEMICOLON EQUAL ASSIGN
 %token REQUIRE ENSURE INVARIANT VARIANT
-%token CLASS CREATE FEATURE KEYWORD
+%token CLASS CREATE FEATURE KEYWORD LOCAL
 %token IDENTIFIER
 %token DO END
 %token DATATYPE
@@ -24,51 +22,78 @@
 %token PRINT
 
 %%
-
+/* Complete Program */
 program: class_declaration
        ;
 
+/* Check if start with class */
 class_declaration: CLASS IDENTIFIER inside_class END
                  ;
 
+/* what can be inside class */
 inside_class:
             | create_declaration features_declaration
             ;
 
+/* Constructor of class */
 create_declaration: CREATE IDENTIFIER
                   ;
 
+/* Features of class declaration can be in any number */
 features_declaration:
                     | features_declaration feature_declaration
                     ;
 
+/* Feature declaration start with keyword "feature" */
 feature_declaration: FEATURE inside_feature
                    ;
 
+/* what can be inside feature */
 inside_feature:
               | IDENTIFIER function_head inside_function inside_feature
               | IDENTIFIER function_head if_return inside_function inside_feature
               ;
 
+/* Arguments to function */
 function_head:
              | OP container CP
              ;
 
+/* what can be inside function */
 inside_function:
-               | DO code_section END
+               | local DO code_section END
+	       ;
 
+/* Declaration of local variables */
+local:
+     | LOCAL variable_declaration
+     ;
+
+/* Variable declaration to declare local variables */
+variable_declaration:
+                    | IDENTIFIER if_return variable_declaration
+                    ;
+
+/* Used to define arguments */
 container:
-         | IDENTIFIER if_return SEMICOLON container
-         | IDENTIFIER if_return container
+         | IDENTIFIER if_return delimiter container
          ;
 
+/* Arguments can be separated by semicolon or space */
+delimiter:
+         | SEMICOLON
+         ;
+
+/* If function is returning something */
 if_return: COLON DATATYPE
          ;
 
+/* Defferent code sections in function */
 code_section: code_section_in
-           | code_section_in code_section
-           ;
+            | code_section_in code_section
+            ;
 
+/* What can be inside function */
 code_section_in: condition
                | inspect_structure
                | loops
@@ -76,69 +101,87 @@ code_section_in: condition
                | print_function
                ;
 
+/* Function to print on stdout in Eiffel */
 print_function: PRINT OP inside_print CP
               ;
 
+/* Arguments to print */
 inside_print: possible_inside_print
             | possible_inside_print ADD inside_print
             ;
 
+/* Arguments to print can be string literal or identifier separeted by '+' */
 possible_inside_print: string_literal
                      | IDENTIFIER
                      ;
 
-condition: if-condition elseif-condition else-condition END
+/* Conditional statements in Eiffel */
+condition: if_condition elseif_condition else-condition END
          ;
 
+/* Any number of Assignments */
 variable_assignments:
-                   | variable_assignments variable_assignment
-                   ;
+                    | variable_assignments variable_assignment
+                    ;
 
+/* Assignment in Eiffel */
 variable_assignment: IDENTIFIER ASSIGN expr
                    | IDENTIFIER ASSIGN string_literal
                    ;
 
+/* For condition of conditional statements */
 statement: bool_exp
          | comp_exp
          ;
 
-if-condition: IF statement THEN code_section
+/* if statement */
+if_condition: IF statement THEN code_section
             ;
 
-elseif-condition:
-                | elseif-condition ELSEIF statement THEN code_section
+/* elseif statement */
+elseif_condition:
+                | elseif_condition ELSEIF statement THEN code_section
                 ;
 
+/* else statement */
 else-condition:
               | ELSE code_section
               ;
 
+/* inspect statements (similar to switch in C) */
 inspect_structure: INSPECT expr when_part_list ELSE code_section END
                  ;
 
+/* multiples when part in inspect */
 when_part_list:
               | when_part_list when_part
               ;
 
+/* when part structure in Eiffel */
 when_part: WHEN choices THEN code_section
          ;
 
+/* values to when in inspect */
 choices: literals
        | literals COMMA choices
        | literals DOTS literals
        ;
 
+/* Basic loop structure in Eiffel */
 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
      ;
 
+/* invariant optional in loop */
 top_loop:
         | invariant_contracts
         ;
 
+/* variant optional in loop */
 bottom_loop:
            | variant_contracts
            ;
 
+/* comparison operators in Eiffel */
 comp_operator: GT
              | GTEQ
              | LT
@@ -146,28 +189,36 @@ comp_operator: GT
              | EQUAL
              ;
 
+/* literal values */
 literals: integer_literal
         | real_literal
         | string_literal
         | double_literal
         | character_literal
         | boolean_literal
+	;
 
+/* integer literal */
 integer_literal: INTEGER
                ;
 
+/* real literal */
 real_literal: REAL
             ;
 
+/* string literal */
 string_literal: STRING
               ;
 
+/* double literal */
 double_literal: DOUBLE
               ;
 
+/* character literal */
 character_literal: CHARACTER
                  ;
 
+/* boolean literal */
 boolean_literal: BOOLEAN
                ;
 
@@ -177,21 +228,26 @@ boolean_literal: BOOLEAN
 ensure_contarct: ENSURE contracts_expressions
                ;*/
 
+/* invariant contract for loop */
 invariant_contracts: INVARIANT contracts_expressions
                    ;
 
+/* variant construct for loop */
 variant_contracts: VARIANT contracts_expressions
                  ;
 
+/* contracts expressions */
 contracts_expressions: IDENTIFIER COLON statement
                      | statement
                      ;
 
+/* Possible expressions */
 expr: bool_exp
     | arithmetic_exp
     | comp_exp
     ;
 
+/* boolean expression starts */
 bool_exp: bool_exp OR bool_term
         | bool_term
         ;
@@ -204,17 +260,19 @@ bool_factor: bool_factor XOR bool_node
            | bool_node
            ;
 
-bool_node: IDENTIFIER %prec shift
-         | NOT bool_node
+bool_node: NOT bool_node
          | BOOLEAN
          | OP bool_exp CP
          ;
+/* boolean expression ends */
 
+/* Comparison expression*/
 comp_exp: arithmetic_exp comp_operator arithmetic_exp
         | string_literal comp_operator string_literal
         | boolean_literal EQUAL boolean_literal
         ;
 
+/* Arithmetic expression starts */
 arithmetic_exp: arithmetic_term
               | arithmetic_exp ADD arithmetic_term
               | arithmetic_exp SUB arithmetic_term
@@ -231,6 +289,7 @@ arithmetic_factor: IDENTIFIER
                  | double_literal
                  | OP arithmetic_exp CP
                  ;
+/* Arithmetic expression ends */
 
 %%
 

@@ -10,7 +10,7 @@ else
 	gcc convert_to_lower.c -o convert_to_lower
 	./convert_to_lower $1
 
-	bison -d -v parser.y
+	bison -d parser.y
 	flex lex.l
 	gcc parser.tab.c lex.yy.c -lfl
 	./a.out < input_converted.e
