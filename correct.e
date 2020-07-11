@@ -64,9 +64,9 @@ class APPLICATION
 				i >= 10
 			loop
 				if 3<4 then 
-					x := (a+b*(c*d/e)/f-g)
+					x := (-a+b*(c*5/(-5))/f-3)+8*(-45)
 				else
-					d := (true or false xor (false and true or true) and false)
+					d := (true or temp xor (false and de or false) and false)
 				end
 			variant 
 				n < 4

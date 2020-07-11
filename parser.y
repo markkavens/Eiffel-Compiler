@@ -116,7 +116,7 @@ possible_inside_print: string_literal
                      ;
 
 /* Conditional statements in Eiffel */
-condition: if_condition elseif_condition else-condition END
+condition: if_condition elseif_condition else_condition END
          ;
 
 /* Any number of Assignments */
@@ -144,7 +144,7 @@ elseif_condition:
                 ;
 
 /* else statement */
-else-condition:
+else_condition:
               | ELSE code_section
               ;
 
@@ -200,10 +200,12 @@ literals: integer_literal
 
 /* integer literal */
 integer_literal: INTEGER
+               | SUB INTEGER
                ;
 
 /* real literal */
 real_literal: REAL
+            | SUB REAL
             ;
 
 /* string literal */
@@ -260,7 +262,8 @@ bool_factor: bool_factor XOR bool_node
            | bool_node
            ;
 
-bool_node: NOT bool_node
+bool_node: IDENTIFIER
+	 | NOT bool_node
          | BOOLEAN
          | OP bool_exp CP
          ;
@@ -288,6 +291,7 @@ arithmetic_factor: IDENTIFIER
                  | real_literal
                  | double_literal
                  | OP arithmetic_exp CP
+                 | SUB IDENTIFIER
                  ;
 /* Arithmetic expression ends */
 

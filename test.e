@@ -7,9 +7,9 @@ class test
 			j: boolean
 		do
 			print(g+"hello"+yhuj+he+"hello"+g)
-			x:= 2+s+b*c
+			x:= -2+s+b*c*(-2)+5/b
 		end
-		x (i: real f: double; c: boolean):real
+		x (i: real)
 		do
 			x:=a
 		end
