@@ -67,16 +67,16 @@ contracts_declaration: IDENTIFIER COLON expr contracts_sec
 
 ////////////// 
 
-condition:
 prog:code_part {puts("success");}
 ;
 
-code_part:code  
+code_part:code
 |code code_part
 ;
 
-code :
-|condition
+
+code :condition
+|from-until-loop
 |STRING
 ;
 
@@ -96,11 +96,13 @@ else-condition:
 |ELSE code_part
 ;
 
+
 statement:
 IDENTIFIER comparison_symbol IDENTIFIER
 |IDENTIFIER comparison_symbol literal 
 |literal comparison_symbol IDENTIFIER
 |literal comparison_symbol literal
+|literal
 ;
 
 comparison_symbol:GT
@@ -115,3 +117,12 @@ INTEGER
 |STRING
 ;
 
+from-until-loop:FROM variables_assignment UNTIL statement LOOP code_part END
+;
+
+variables_assignment:variable_assignment
+| variables_assignment variable_assignment
+;
+
+variable_assignment:IDENTIFIER COLON EQUAL statement
+;
