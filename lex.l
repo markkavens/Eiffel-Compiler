@@ -52,9 +52,9 @@ comment					 [-][-](.)*
 
 %%
 
-class			{yylval = line; return CLASS;}
+"class"				{yylval = line; return CLASS;}
 
-create			{yylval = line; return CREATE;}
+"create"			{yylval = line; return CREATE;}
 
 {integer}				{
 						// printf("%s\n", yytext);
@@ -80,37 +80,37 @@ create			{yylval = line; return CREATE;}
 
 do {yylval = line; return DO;}
 
-end {yylval = line; return END;}
+"end" 				{yylval = line; return END;}
 
-feature			{yylval = line; return FEATURE;}
+"feature"			{yylval = line; return FEATURE;}
 
-"if"			{return IF;}
+"if"				{return IF;}
 
-"then"			{return THEN;}
+"then"				{return THEN;}
 
-"else"			{return ELSE;}
+"else"				{return ELSE;}
 
-"elseif"		{return ELSEIF;}
+"elseif"			{return ELSEIF;}
 
-:= {return ASSIGN;}
+":=" 				{return ASSIGN;}
 
-from {return FROM;}
+"from" 				{return FROM;}
 
-until {return UNTIL;}
+"until" 			{return UNTIL;}
 
-loop {return LOOP;}
+"loop" 				{return LOOP;}
 
-inspect {return INSPECT;}
+"inspect" 			{return INSPECT;}
 
-".." {return DOTS;}
+".." 				{return DOTS;}
 
-"|..|" {return PIPEDOTS;}
+"|..|" 				{return PIPEDOTS;}
 
-variant {return VARIANT;}
+"variant" 			{return VARIANT;}
 
-invariant {return INVARIANT;}
+"invariant" 		{return INVARIANT;}
 
-when {return WHEN;}
+"when" 				{return WHEN;}
 
 "*" {return MUL;}
 "/" {return DIV;}
@@ -127,14 +127,26 @@ xor {return XOR;}
 "<="			{return (LTEQ);}
 ">="			{return (GTEQ);}
 "~"				{return (NOT);}
-
 "," {return COMMA;}
 
-[:] {yylval = line; return COLON;}
+[:] 				{yylval = line; return COLON;}
 
-[;] {yylval = line; return SEMICOLON;}
+[;] 				{yylval = line; return SEMICOLON;}
 
-[\(] {yylval = line; return OP;}
+[\(] 				{yylval = line; return OP;}
+
+[\)] 				{yylval = line; return CP;}
+
+"+"					{return ADD;}
+"-"					{return SUB;}
+"*"					{return MUL;}
+"/"					{return DIV;}
+"~"					{return NOT;}
+"and"				{return AND;}
+"or"				{return OR;}
+"xor"				{return XOR;}
+"true"				{return TRUE;}
+"false"				{return FALSE;}
 
 [\)] {yylval = line; return CP;}
 [=] {return EQUAL;}

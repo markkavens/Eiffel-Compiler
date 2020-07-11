@@ -219,7 +219,7 @@ arithmetic_term: arithmetic_factor
                | arithmetic_term DIV arithmetic_factor
                ;
 
-arithmetic_factor: IDENTIFIER 
+arithmetic_factor: IDENTIFIER
                  |integer_literal
                  | real_literal
                  | double_literal
