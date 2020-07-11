@@ -27,147 +27,149 @@
 	int line=1, col=1;
 %}
 
-keyword					 						feature|class|do|end|alias|assign|once|inherit|redefine|if|create|else|require|ensure|local|invariant|Result|then|elseif|old|io.new_line|from|until|loop|across|as|create|NONE|Void|implies|note|description|author|NULL|local|Current|extend|compare_objects|is_empty|out|make
+keyword					 				feature|class|do|end|alias|assign|once|inherit|redefine|if|create|else|require|ensure|local|invariant|Result|then|elseif|old|io.new_line|from|until|loop|across|as|create|NONE|Void|implies|note|description|author|NULL|local|Current|extend|compare_objects|is_empty|out|make
 predefined_types			 			integer|string|real|boolean|double|arrayed_list|character
-identifier								  [a-zA-Z][a-zA-Z0-9\_]*
-zero											  0
+identifier								[a-zA-Z][a-zA-Z0-9\_]*
+zero									0
 unsignedInteger				 			[1-9][0-9]*
-signedInteger				 				([-]|[+]){unsignedInteger}
-integer										  (([-]|[+])?{zero}|{unsignedInteger}|{signedInteger})
-real					 							((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)
-text										 	  [^[\"]]
-string					 					  \"(\\.|[^"\\])*\"
-newline					 						\n
-whitespace				 					[\t ]+
-class_name									\n
-function				 						[a-zA-Z][a-zA-Z0-9\_]*[\t ]*([(][\t ]*{identifier}[\t ]*[)]|[(][\t ]*{identifier}[\t ]*[:][\t ]*({predefined_types}|{class_name})[\t ]*[)])
-delimiter									  "("|")"|"{"|"}"|"["|"]"|"|"|"'"|[\"]
+signedInteger				 			([-]|[+]){unsignedInteger}
+integer									(([-]|[+])?{zero}|{unsignedInteger}|{signedInteger})
+real					 				((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)
+text									[^[\"]]
+string					 				\"(\\.|[^"\\])*\"
+newline					 				\n
+whitespace				 				[\t ]+
+class_name								\n
+function				 				[a-zA-Z][a-zA-Z0-9\_]*[\t ]*([(][\t ]*{identifier}[\t ]*[)]|[(][\t ]*{identifier}[\t ]*[:][\t ]*({predefined_types}|{class_name})[\t ]*[)])
+delimiter						     	"("|")"|"{"|"}"|"["|"]"|"|"|"'"|[\"]
 logicOperators 				 			and|or|xor|not
-semistrictLogicOperators		"and then"|"or else"|implies
+semistrictLogicOperators				"and then"|"or else"|implies
 specialOperator				 			{logicOperators}|{semistrictLogicOperators}
-comparisonOperators			 		"<"|">"|"<="|">="|"~"
-mathematicalOperators			 	"+"|"-"|"*"|"/"
-operator 				 						":="|"="|"/="|"//"|"\\"|"^"|".."|"|..|"|{comparisonOperators}|{mathematicalOperators}
-comment						 					[-][-](.)*
+comparisonOperators			 			"<"|">"|"<="|">="|"~"
+mathematicalOperators			 		"+"|"-"|"*"|"/"
+operator 				 				":="|"="|"/="|"//"|"\\"|"^"|".."|"|..|"|{comparisonOperators}|{mathematicalOperators}
+comment						 			[-][-](.)*
 
 %%
 
 "class"									{yylval = line; return CLASS;}
 "create"								{yylval = line; return CREATE;}
-"do" 										{yylval = line; return DO;}
+"do" 									{yylval = line; return DO;}
 "end" 									{yylval = line; return END;}
 "feature"								{yylval = line; return FEATURE;}
 "print"									{return PRINT;}
-"if"										{return IF;}
+"if"									{return IF;}
 "then"									{return THEN;}
 "else"									{return ELSE;}
 "elseif"								{return ELSEIF;}
-":=" 										{return ASSIGN;}
+":=" 									{return ASSIGN;}
 "from" 									{return FROM;}
 "until" 								{return UNTIL;}
 "loop" 									{return LOOP;}
-"inspect" 							{return INSPECT;}
-".." 										{return DOTS;}
+"inspect" 								{return INSPECT;}
+".." 									{return DOTS;}
 "|..|" 									{return PIPEDOTS;}
-"variant" 							{return VARIANT;}
-"invariant" 						{return INVARIANT;}
+"variant" 								{return VARIANT;}
+"invariant" 							{return INVARIANT;}
 "when" 									{return WHEN;}
-"*" 										{return MUL;}
-"/" 										{return DIV;}
-"+" 										{return ADD;}
-"-" 										{return SUB;}
+"*" 									{return MUL;}
+"/" 									{return DIV;}
+"+" 									{return ADD;}
+"-" 									{return SUB;}
 "not" 									{return NOT;}
-"true"|"false"					{return BOOLEAN;}
-"and"		 								{return AND;}
-"or" 										{return OR;}
+"true"|"false"							{return BOOLEAN;}
+"and"		 							{return AND;}
+"or" 									{return OR;}
 "xor" 									{return XOR;}
-"<"											{return (LT);}
-">"											{return (GT);}
-"<="										{return (LTEQ);}
-">="										{return (GTEQ);}
-"~"											{return (NOT);}
-"," 										{return COMMA;}
-":"											{yylval = line; return COLON;}
-";"							 				{yylval = line; return SEMICOLON;}
-"(" 										{yylval = line; return OP;}
-")" 										{yylval = line; return CP;}
+"<"										{return (LT);}
+">"										{return (GT);}
+"<="									{return (LTEQ);}
+">="									{return (GTEQ);}
+"~"										{return (NOT);}
+"," 									{return COMMA;}
+":"										{yylval = line; return COLON;}
+";"							 			{yylval = line; return SEMICOLON;}
+"(" 									{yylval = line; return OP;}
+")" 									{yylval = line; return CP;}
 "="		 					  			{return EQUAL;}
 
 {integer}								{
-														addHashUtil(yytext, "Integer", line, col);
-														col += yyleng;
-														yylval = line;
-														return INTEGER;
-												}
+											addHashUtil(yytext, "Integer", line, col);
+											col += yyleng;
+											yylval = line;
+											return INTEGER;
+										}
 {real}									{
-														addHashUtil(yytext, "Real No.", line, col);
-														col += yyleng;
-														yylval = line;
-														return REAL;
-												}
+											addHashUtil(yytext, "Real No.", line, col);
+											col += yyleng;
+											yylval = line;
+											return REAL;
+										}
 {string}								{
-														addHashUtil(yytext, "String", line, col);
-														col += yyleng;
-														yylval = line;
-														return STRING;
-												}
+											addHashUtil(yytext, "String", line, col);
+											col += yyleng;
+											yylval = line;
+											return STRING;
+										}
 {keyword}								{
-														addHashUtil(yytext, "Keyword", line, col);
-														col += yyleng;
-														return KEYWORD;
-												}
-{predefined_types}			{
-														addHashUtil(yytext, "Predefined Type", line, col);
-														col += yyleng;
-														return DATATYPE;
-												}
-{function}							{
-														strtok(yytext, "(");
-														addHashUtil(yytext, "Function", line, col);
-														col += yyleng;
-												}
-{specialOperator}				{
-														addHashUtil(yytext, "Special Operator", line, col);
-														col += yyleng;
-												}
-{identifier}						{
-														addHashUtil(yytext, "Identifier", line, col);
-														col += yyleng;
-														yylval = line;
-														return IDENTIFIER;
-												}
-{whitespace}						{
-														col += yyleng;
-												}
+											addHashUtil(yytext, "Keyword", line, col);
+											col += yyleng;
+											return KEYWORD;
+										}
+{predefined_types}						{
+											addHashUtil(yytext, "Predefined Type", line, col);
+											col += yyleng;
+											return DATATYPE;
+										}
+{function}								{
+											strtok(yytext, "(");
+											addHashUtil(yytext, "Function", line, col);
+											col += yyleng;
+										}
+{specialOperator}						{
+											addHashUtil(yytext, "Special Operator", line, col);
+											col += yyleng;
+										}
+{identifier}							{
+											addHashUtil(yytext, "Identifier", line, col);
+											col += yyleng;
+											yylval = line;
+											return IDENTIFIER;
+										}
+{whitespace}							{
+											col += yyleng;
+										}
 {newline}								{
-														line++;
-														col=1;
-												}
-{delimiter}							{
-														col += yyleng;
-												}
-{operator}							{
-														addHashUtil(yytext, "Operator", line, col);
-														col += yyleng;
-												}
+											line++;
+											col=1;
+										}
+{delimiter}								{
+											col += yyleng;
+										}
+{operator}								{
+											addHashUtil(yytext, "Operator", line, col);
+											col += yyleng;
+										}
 {comment}								{
-														addHashUtil(yytext, "Comment", line, col);
-														col += yyleng;
-												}
-[\.]										{
-														col += yyleng;
-												}
+											addHashUtil(yytext, "Comment", line, col);
+											col += yyleng;
+										}
+[\.]									{
+											col += yyleng;
+										}
 
 %%
 
-void addHashUtil(char* yytext, char* type, int line, int col) {
+void addHashUtil(char* yytext, char* type, int line, int col) 
+{
     Lexeme* temp = (Lexeme*)malloc(sizeof(Lexeme));
     temp = findHash(yytext);
     if(temp == NULL)
         addHash(type, line, yytext, col);
 }
 
-void addHash(char* type, int line_no, char* value, int col_no) {
+void addHash(char* type, int line_no, char* value, int col_no) 
+{
     Lexeme* temp = (Lexeme*)malloc(sizeof(Lexeme));
     strcpy(temp->val, value);
     temp->content = (Content*)malloc(sizeof(Content));
@@ -178,7 +180,8 @@ void addHash(char* type, int line_no, char* value, int col_no) {
     free(temp);
 }
 
-Lexeme* findHash(char* str) {
+Lexeme* findHash(char* str) 
+{
     Lexeme* temp = (Lexeme*)malloc(sizeof(Lexeme));
     HASH_FIND_STR(lexemes, str, temp);
     return temp;
