@@ -21,6 +21,9 @@
 %token AND OR XOR NOT
 %token PRINT
 
+%glr-parser
+%expect-rr 13
+
 %%
 /* Complete Program */
 program: class_declaration
@@ -263,7 +266,7 @@ bool_factor: bool_factor XOR bool_node
            ;
 
 bool_node: IDENTIFIER
-	 | NOT bool_node
+	       | NOT bool_node
          | BOOLEAN
          | OP bool_exp CP
          ;
