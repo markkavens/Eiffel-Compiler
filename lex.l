@@ -27,183 +27,137 @@
 	int line=1, col=1;
 %}
 
-keyword					 feature|class|do|end|alias|assign|once|inherit|redefine|if|create|else|require|ensure|local|invariant|Result|then|elseif|old|io.new_line|from|until|loop|across|as|create|NONE|Void|implies|note|description|author|NULL|local|Current|extend|compare_objects|is_empty|out|make
-predefined_types			 integer|string|real|boolean|double|arrayed_list|character
-identifier				 [a-zA-Z][a-zA-Z0-9\_]*
-zero					 0
-unsignedInteger				 [1-9][0-9]*
-signedInteger				 ([-]|[+]){unsignedInteger}
-integer					 (([-]|[+])?{zero}|{unsignedInteger}|{signedInteger})
-real					 ((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)
-text					 [^[\"]]
-string					 \"(\\.|[^"\\])*\"
-newline					 \n
-whitespace				 [\t ]+
-class_name				 \n
-function				 [a-zA-Z][a-zA-Z0-9\_]*[\t ]*([(][\t ]*{identifier}[\t ]*[)]|[(][\t ]*{identifier}[\t ]*[:][\t ]*({predefined_types}|{class_name})[\t ]*[)])
-delimiter				 "("|")"|"{"|"}"|"["|"]"|"|"|"'"|[\"]
-logicOperators 				 and|or|xor|not
-semistrictLogicOperators		 "and then"|"or else"|implies
-specialOperator				 {logicOperators}|{semistrictLogicOperators}
-comparisonOperators			 "<"|">"|"<="|">="|"~"
-mathematicalOperators			 "+"|"-"|"*"|"/"
-operator 				 ":="|"="|"/="|"//"|"\\"|"^"|".."|"|..|"|{comparisonOperators}|{mathematicalOperators}
-comment					 [-][-](.)*
+keyword					 						feature|class|do|end|alias|assign|once|inherit|redefine|if|create|else|require|ensure|local|invariant|Result|then|elseif|old|io.new_line|from|until|loop|across|as|create|NONE|Void|implies|note|description|author|NULL|local|Current|extend|compare_objects|is_empty|out|make
+predefined_types			 			integer|string|real|boolean|double|arrayed_list|character
+identifier								  [a-zA-Z][a-zA-Z0-9\_]*
+zero											  0
+unsignedInteger				 			[1-9][0-9]*
+signedInteger				 				([-]|[+]){unsignedInteger}
+integer										  (([-]|[+])?{zero}|{unsignedInteger}|{signedInteger})
+real					 							((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)
+text										 	  [^[\"]]
+string					 					  \"(\\.|[^"\\])*\"
+newline					 						\n
+whitespace				 					[\t ]+
+class_name									\n
+function				 						[a-zA-Z][a-zA-Z0-9\_]*[\t ]*([(][\t ]*{identifier}[\t ]*[)]|[(][\t ]*{identifier}[\t ]*[:][\t ]*({predefined_types}|{class_name})[\t ]*[)])
+delimiter									  "("|")"|"{"|"}"|"["|"]"|"|"|"'"|[\"]
+logicOperators 				 			and|or|xor|not
+semistrictLogicOperators		"and then"|"or else"|implies
+specialOperator				 			{logicOperators}|{semistrictLogicOperators}
+comparisonOperators			 		"<"|">"|"<="|">="|"~"
+mathematicalOperators			 	"+"|"-"|"*"|"/"
+operator 				 						":="|"="|"/="|"//"|"\\"|"^"|".."|"|..|"|{comparisonOperators}|{mathematicalOperators}
+comment						 					[-][-](.)*
 
 %%
 
-"class"				{yylval = line; return CLASS;}
+"class"									{yylval = line; return CLASS;}
+"create"								{yylval = line; return CREATE;}
+"do" 										{yylval = line; return DO;}
+"end" 									{yylval = line; return END;}
+"feature"								{yylval = line; return FEATURE;}
+"print"									{return PRINT;}
+"if"										{return IF;}
+"then"									{return THEN;}
+"else"									{return ELSE;}
+"elseif"								{return ELSEIF;}
+":=" 										{return ASSIGN;}
+"from" 									{return FROM;}
+"until" 								{return UNTIL;}
+"loop" 									{return LOOP;}
+"inspect" 							{return INSPECT;}
+".." 										{return DOTS;}
+"|..|" 									{return PIPEDOTS;}
+"variant" 							{return VARIANT;}
+"invariant" 						{return INVARIANT;}
+"when" 									{return WHEN;}
+"*" 										{return MUL;}
+"/" 										{return DIV;}
+"+" 										{return ADD;}
+"-" 										{return SUB;}
+"not" 									{return NOT;}
+"true"|"false"					{return BOOLEAN;}
+"and"		 								{return AND;}
+"or" 										{return OR;}
+"xor" 									{return XOR;}
+"<"											{return (LT);}
+">"											{return (GT);}
+"<="										{return (LTEQ);}
+">="										{return (GTEQ);}
+"~"											{return (NOT);}
+"," 										{return COMMA;}
+":"											{yylval = line; return COLON;}
+";"							 				{yylval = line; return SEMICOLON;}
+"(" 										{yylval = line; return OP;}
+")" 										{yylval = line; return CP;}
+"="		 					  			{return EQUAL;}
 
-"create"			{yylval = line; return CREATE;}
-
-{integer}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Integer", line, col);
-						col += yyleng;
-						yylval = line;
-						return INTEGER;
-					}
-{real}					{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Real No.", line, col);
-						col += yyleng;
-						yylval = line;
-						return REAL;
-					}
-{string}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "String", line, col);
-						col += yyleng;
-						yylval = line;
-						return STRING;
-					}
-
-do {yylval = line; return DO;}
-
-"end" 				{yylval = line; return END;}
-
-"feature"			{yylval = line; return FEATURE;}
-
-"if"				{return IF;}
-
-"then"				{return THEN;}
-
-"else"				{return ELSE;}
-
-"elseif"			{return ELSEIF;}
-
-":=" 				{return ASSIGN;}
-
-"from" 				{return FROM;}
-
-"until" 			{return UNTIL;}
-
-"loop" 				{return LOOP;}
-
-"inspect" 			{return INSPECT;}
-
-".." 				{return DOTS;}
-
-"|..|" 				{return PIPEDOTS;}
-
-"variant" 			{return VARIANT;}
-
-"invariant" 		{return INVARIANT;}
-
-"when" 				{return WHEN;}
-
-"*" {return MUL;}
-"/" {return DIV;}
-"+" {return ADD;}
-"-" {return SUB;}
-not {return NOT;}
-"true"|"false" {return BOOLEAN;}
-and {return AND;}
-or {return OR;}
-xor {return XOR;}
-
-"<"				{return (LT);}
-">"				{return (GT);}
-"<="			{return (LTEQ);}
-">="			{return (GTEQ);}
-"~"				{return (NOT);}
-"," {return COMMA;}
-
-[:] 				{yylval = line; return COLON;}
-
-[;] 				{yylval = line; return SEMICOLON;}
-
-[\(] 				{yylval = line; return OP;}
-
-[\)] 				{yylval = line; return CP;}
-
-"+"					{return ADD;}
-"-"					{return SUB;}
-"*"					{return MUL;}
-"/"					{return DIV;}
-"~"					{return NOT;}
-"and"				{return AND;}
-"or"				{return OR;}
-"xor"				{return XOR;}
-"true"				{return TRUE;}
-"false"				{return FALSE;}
-
-[\)] {yylval = line; return CP;}
-[=] {return EQUAL;}
-{keyword}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Keyword", line, col);
-						col += yyleng;
-						/* return KEYWORD; */
-					}
+{integer}								{
+														addHashUtil(yytext, "Integer", line, col);
+														col += yyleng;
+														yylval = line;
+														return INTEGER;
+												}
+{real}									{
+														addHashUtil(yytext, "Real No.", line, col);
+														col += yyleng;
+														yylval = line;
+														return REAL;
+												}
+{string}								{
+														addHashUtil(yytext, "String", line, col);
+														col += yyleng;
+														yylval = line;
+														return STRING;
+												}
+{keyword}								{
+														addHashUtil(yytext, "Keyword", line, col);
+														col += yyleng;
+														return KEYWORD;
+												}
 {predefined_types}			{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Predefined Type", line, col);
-						col += yyleng;
-						return DATATYPE;
-					}
-{function}				{
-						// printf("%s\n", yytext);
-						strtok(yytext, "(");
-						addHashUtil(yytext, "Function", line, col);
-						col += yyleng;
-						/* return FUNCTION; */
-					}
-{specialOperator}			{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Special Operator", line, col);
-						col += yyleng;
-					}
-{identifier}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Identifier", line, col);
-						col += yyleng;
-						yylval = line;
-						return IDENTIFIER;
-					}
-{whitespace}				{
-						col += yyleng;
-					}
-{newline}				{
-						line++;
-						col=1;
-					}
-{delimiter}				{
-						col += yyleng;
-					}
-{operator}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Operator", line, col);
-						col += yyleng;
-					}
-{comment}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Comment", line, col);
-						col += yyleng;
-					}
-[\.]					{
-						col += yyleng;
-					}
+														addHashUtil(yytext, "Predefined Type", line, col);
+														col += yyleng;
+														return DATATYPE;
+												}
+{function}							{
+														strtok(yytext, "(");
+														addHashUtil(yytext, "Function", line, col);
+														col += yyleng;
+												}
+{specialOperator}				{
+														addHashUtil(yytext, "Special Operator", line, col);
+														col += yyleng;
+												}
+{identifier}						{
+														addHashUtil(yytext, "Identifier", line, col);
+														col += yyleng;
+														yylval = line;
+														return IDENTIFIER;
+												}
+{whitespace}						{
+														col += yyleng;
+												}
+{newline}								{
+														line++;
+														col=1;
+												}
+{delimiter}							{
+														col += yyleng;
+												}
+{operator}							{
+														addHashUtil(yytext, "Operator", line, col);
+														col += yyleng;
+												}
+{comment}								{
+														addHashUtil(yytext, "Comment", line, col);
+														col += yyleng;
+												}
+[\.]										{
+														col += yyleng;
+												}
+
 %%
 
 void addHashUtil(char* yytext, char* type, int line, int col) {
@@ -221,8 +175,6 @@ void addHash(char* type, int line_no, char* value, int col_no) {
     temp->content->col_no = col_no;
     strcpy(temp->content->type, type);
     HASH_ADD_KEYPTR(hh, lexemes, temp->val, strlen(temp->val), temp);
-    /* printf("%10s|%10d\t|\t%5d\t|\t%-50s\t|\t%-20s|\n"," ", line, col, yytext, type); */
-    /* printLines(); */
     free(temp);
 }
 

@@ -3,6 +3,7 @@ class test
 	feature
 		make1
 		do
-			x:= 2+3+6
+			print(g+"hello"+yhuj+he+"hello"+g)
+			x:= 2+a+b*c
 		end
 end

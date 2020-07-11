@@ -11,7 +11,7 @@
 %token INTEGER REAL STRING ARRAYED_LIST BOOLEAN CHARACTER DOUBLE
 %token OP CP OSB CSB COLON SEMICOLON EQUAL ASSIGN
 %token REQUIRE ENSURE INVARIANT VARIANT
-%token CLASS CREATE FEATURE
+%token CLASS CREATE FEATURE KEYWORD
 %token IDENTIFIER
 %token DO END
 %token DATATYPE
@@ -21,6 +21,7 @@
 %token FROM UNTIL LOOP
 %token ADD SUB MUL DIV
 %token AND OR XOR NOT
+%token PRINT
 
 %%
 
@@ -72,7 +73,19 @@ code_section_in: condition
                | inspect_structure
                | loops
                | variable_assignment
+               | print_function
                ;
+
+print_function: PRINT OP inside_print CP
+              ;
+
+inside_print: possible_inside_print
+            | possible_inside_print ADD inside_print
+            ;
+
+possible_inside_print: string_literal
+                     | IDENTIFIER
+                     ;
 
 condition: if-condition elseif-condition else-condition END
          ;
@@ -125,13 +138,6 @@ top_loop:
 bottom_loop:
            | variant_contracts
            ;
-
-/*statement: expr comp_operator expr
-         ;
-
-expr: IDENTIFIER
-    | literals
-    ;*/
 
 comp_operator: GT
              | GTEQ
@@ -220,7 +226,7 @@ arithmetic_term: arithmetic_factor
                ;
 
 arithmetic_factor: IDENTIFIER
-                 |integer_literal
+                 | integer_literal
                  | real_literal
                  | double_literal
                  | OP arithmetic_exp CP

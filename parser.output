@@ -5,7 +5,11 @@ Terminals unused in grammar
    CSB
    REQUIRE
    ENSURE
+   KEYWORD
    PIPEDOTS
+
+
+State 51 conflicts: 13 reduce/reduce
 
 
 Grammar
@@ -49,111 +53,121 @@ Grammar
    23                | inspect_structure
    24                | loops
    25                | variable_assignment
+   26                | print_function
 
-   26 condition: if-condition elseif-condition else-condition END
+   27 print_function: PRINT OP inside_print CP
 
-   27 variable_assignments: %empty
-   28                     | variable_assignments variable_assignment
+   28 inside_print: possible_inside_print
+   29             | possible_inside_print ADD inside_print
 
-   29 variable_assignment: IDENTIFIER ASSIGN expr
-   30                    | IDENTIFIER ASSIGN string_literal
+   30 possible_inside_print: string_literal
+   31                      | IDENTIFIER
 
-   31 statement: bool_exp
-   32          | comp_exp
+   32 condition: if-condition elseif-condition else-condition END
 
-   33 if-condition: IF statement THEN code_section
+   33 variable_assignments: %empty
+   34                     | variable_assignments variable_assignment
 
-   34 elseif-condition: %empty
-   35                 | elseif-condition ELSEIF statement THEN code_section
+   35 variable_assignment: IDENTIFIER ASSIGN expr
+   36                    | IDENTIFIER ASSIGN string_literal
 
-   36 else-condition: %empty
-   37               | ELSE code_section
+   37 statement: bool_exp
+   38          | comp_exp
 
-   38 inspect_structure: INSPECT expr when_part_list ELSE code_section END
+   39 if-condition: IF statement THEN code_section
 
-   39 when_part_list: %empty
-   40               | when_part_list when_part
+   40 elseif-condition: %empty
+   41                 | elseif-condition ELSEIF statement THEN code_section
 
-   41 when_part: WHEN choices THEN code_section
+   42 else-condition: %empty
+   43               | ELSE code_section
 
-   42 choices: literals
-   43        | literals COMMA choices
-   44        | literals DOTS literals
+   44 inspect_structure: INSPECT expr when_part_list ELSE code_section END
 
-   45 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
+   45 when_part_list: %empty
+   46               | when_part_list when_part
 
-   46 top_loop: %empty
-   47         | invariant_contracts
+   47 when_part: WHEN choices THEN code_section
 
-   48 bottom_loop: %empty
-   49            | variant_contracts
+   48 choices: literals
+   49        | literals COMMA choices
+   50        | literals DOTS literals
 
-   50 comp_operator: GT
-   51              | GTEQ
-   52              | LT
-   53              | LTEQ
-   54              | EQUAL
+   51 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
 
-   55 literals: integer_literal
-   56         | real_literal
-   57         | string_literal
-   58         | double_literal
-   59         | character_literal
-   60         | boolean_literal
+   52 top_loop: %empty
+   53         | invariant_contracts
 
-   61 integer_literal: INTEGER
+   54 bottom_loop: %empty
+   55            | variant_contracts
 
-   62 real_literal: REAL
+   56 comp_operator: GT
+   57              | GTEQ
+   58              | LT
+   59              | LTEQ
+   60              | EQUAL
 
-   63 string_literal: STRING
+   61 literals: integer_literal
+   62         | real_literal
+   63         | string_literal
+   64         | double_literal
+   65         | character_literal
+   66         | boolean_literal
 
-   64 double_literal: DOUBLE
+   67 integer_literal: INTEGER
 
-   65 character_literal: CHARACTER
+   68 real_literal: REAL
 
-   66 boolean_literal: BOOLEAN
+   69 string_literal: STRING
 
-   67 invariant_contracts: INVARIANT contracts_expressions
+   70 double_literal: DOUBLE
 
-   68 variant_contracts: VARIANT contracts_expressions
+   71 character_literal: CHARACTER
 
-   69 contracts_expressions: IDENTIFIER COLON statement
-   70                      | statement
+   72 boolean_literal: BOOLEAN
 
-   71 expr: bool_exp
-   72     | arithmetic_exp
-   73     | comp_exp
+   73 invariant_contracts: INVARIANT contracts_expressions
 
-   74 bool_exp: bool_exp OR bool_term
-   75         | bool_term
+   74 variant_contracts: VARIANT contracts_expressions
 
-   76 bool_term: bool_term AND bool_factor
-   77          | bool_factor
+   75 contracts_expressions: IDENTIFIER COLON statement
+   76                      | statement
 
-   78 bool_factor: bool_factor XOR bool_node
-   79            | bool_node
+   77 expr: bool_exp
+   78     | arithmetic_exp
+   79     | comp_exp
 
-   80 bool_node: IDENTIFIER
-   81          | NOT bool_node
-   82          | BOOLEAN
-   83          | OP bool_exp CP
+   80 bool_exp: bool_exp OR bool_term
+   81         | bool_term
 
-   84 comp_exp: arithmetic_exp comp_operator arithmetic_exp
-   85         | string_literal comp_operator string_literal
-   86         | boolean_literal EQUAL boolean_literal
+   82 bool_term: bool_term AND bool_factor
+   83          | bool_factor
 
-   87 arithmetic_exp: arithmetic_term
-   88               | arithmetic_exp ADD arithmetic_term
-   89               | arithmetic_exp SUB arithmetic_term
+   84 bool_factor: bool_factor XOR bool_node
+   85            | bool_node
 
-   90 arithmetic_term: arithmetic_factor
-   91                | arithmetic_term MUL arithmetic_factor
-   92                | arithmetic_term DIV arithmetic_factor
+   86 bool_node: IDENTIFIER
+   87          | NOT bool_node
+   88          | BOOLEAN
+   89          | OP bool_exp CP
 
-   93 arithmetic_factor: integer_literal
-   94                  | real_literal
-   95                  | double_literal
-   96                  | OP arithmetic_exp CP
+   90 comp_exp: arithmetic_exp comp_operator arithmetic_exp
+   91         | string_literal comp_operator string_literal
+   92         | boolean_literal EQUAL boolean_literal
+
+   93 arithmetic_exp: arithmetic_term
+   94               | arithmetic_exp ADD arithmetic_term
+   95               | arithmetic_exp SUB arithmetic_term
+
+   96 arithmetic_term: arithmetic_factor
+   97                | arithmetic_term MUL arithmetic_factor
+   98                | arithmetic_term DIV arithmetic_factor
+
+   99 arithmetic_factor: IDENTIFIER
+  100                  | integer_literal
+  101                  | real_literal
+  102                  | double_literal
+  103                  | OP arithmetic_exp CP
 
 
 Terminals, with rules where they appear
@@ -161,156 +175,164 @@ Terminals, with rules where they appear
 $end (0) 0
 error (256)
 shift (258)
-INTEGER (259) 61
-REAL (260) 62
-STRING (261) 63
+INTEGER (259) 67
+REAL (260) 68
+STRING (261) 69
 ARRAYED_LIST (262)
-BOOLEAN (263) 66 82
-CHARACTER (264) 65
-DOUBLE (265) 64
-OP (266) 13 83 96
-CP (267) 13 83 96
+BOOLEAN (263) 72 88
+CHARACTER (264) 71
+DOUBLE (265) 70
+OP (266) 13 27 89 103
+CP (267) 13 27 89 103
 OSB (268)
 CSB (269)
-COLON (270) 19 69
+COLON (270) 19 75
 SEMICOLON (271) 17
-EQUAL (272) 54 86
-ASSIGN (273) 29 30
+EQUAL (272) 60 92
+ASSIGN (273) 35 36
 REQUIRE (274)
 ENSURE (275)
-INVARIANT (276) 67
-VARIANT (277) 68
+INVARIANT (276) 73
+VARIANT (277) 74
 CLASS (278) 2
 CREATE (279) 5
 FEATURE (280) 8
-IDENTIFIER (281) 2 5 10 11 17 18 29 30 69 80
-DO (282) 15
-END (283) 2 15 26 38 45
-DATATYPE (284) 19
-IF (285) 33
-THEN (286) 33 35 41
-ELSEIF (287) 35
-ELSE (288) 37 38
-INSPECT (289) 38
-WHEN (290) 41
-COMMA (291) 43
-GTEQ (292) 51
-LT (293) 52
-LTEQ (294) 53
-GT (295) 50
-PIPEDOTS (296)
-DOTS (297) 44
-FROM (298) 45
-UNTIL (299) 45
-LOOP (300) 45
-ADD (301) 88
-SUB (302) 89
-MUL (303) 91
-DIV (304) 92
-AND (305) 76
-OR (306) 74
-XOR (307) 78
-NOT (308) 81
+KEYWORD (281)
+IDENTIFIER (282) 2 5 10 11 17 18 31 35 36 75 86 99
+DO (283) 15
+END (284) 2 15 32 44 51
+DATATYPE (285) 19
+IF (286) 39
+THEN (287) 39 41 47
+ELSEIF (288) 41
+ELSE (289) 43 44
+INSPECT (290) 44
+WHEN (291) 47
+COMMA (292) 49
+GTEQ (293) 57
+LT (294) 58
+LTEQ (295) 59
+GT (296) 56
+PIPEDOTS (297)
+DOTS (298) 50
+FROM (299) 51
+UNTIL (300) 51
+LOOP (301) 51
+ADD (302) 29 94
+SUB (303) 95
+MUL (304) 97
+DIV (305) 98
+AND (306) 82
+OR (307) 80
+XOR (308) 84
+NOT (309) 87
+PRINT (310) 27
 
 
 Nonterminals, with rules where they appear
 
-$accept (54)
+$accept (56)
     on left: 0
-program (55)
+program (57)
     on left: 1, on right: 0
-class_declaration (56)
+class_declaration (58)
     on left: 2, on right: 1
-inside_class (57)
+inside_class (59)
     on left: 3 4, on right: 2
-create_declaration (58)
+create_declaration (60)
     on left: 5, on right: 4
-features_declaration (59)
+features_declaration (61)
     on left: 6 7, on right: 4 7
-feature_declaration (60)
+feature_declaration (62)
     on left: 8, on right: 7
-inside_feature (61)
+inside_feature (63)
     on left: 9 10 11, on right: 8 10 11
-function_head (62)
+function_head (64)
     on left: 12 13, on right: 10 11
-inside_function (63)
+inside_function (65)
     on left: 14 15, on right: 10 11
-container (64)
+container (66)
     on left: 16 17 18, on right: 13 17 18
-if_return (65)
+if_return (67)
     on left: 19, on right: 11 17 18
-code_section (66)
-    on left: 20 21, on right: 15 21 33 35 37 38 41 45
-code_section_in (67)
-    on left: 22 23 24 25, on right: 20 21
-condition (68)
-    on left: 26, on right: 22
-variable_assignments (69)
-    on left: 27 28, on right: 28 45
-variable_assignment (70)
-    on left: 29 30, on right: 25 28 45
-statement (71)
-    on left: 31 32, on right: 33 35 45 69 70
-if-condition (72)
-    on left: 33, on right: 26
-elseif-condition (73)
-    on left: 34 35, on right: 26 35
-else-condition (74)
-    on left: 36 37, on right: 26
-inspect_structure (75)
-    on left: 38, on right: 23
-when_part_list (76)
-    on left: 39 40, on right: 38 40
-when_part (77)
-    on left: 41, on right: 40
-choices (78)
-    on left: 42 43 44, on right: 41 43
-loops (79)
-    on left: 45, on right: 24
-top_loop (80)
-    on left: 46 47, on right: 45
-bottom_loop (81)
-    on left: 48 49, on right: 45
-comp_operator (82)
-    on left: 50 51 52 53 54, on right: 84 85
-literals (83)
-    on left: 55 56 57 58 59 60, on right: 42 43 44
-integer_literal (84)
-    on left: 61, on right: 55 93
-real_literal (85)
-    on left: 62, on right: 56 94
-string_literal (86)
-    on left: 63, on right: 30 57 85
-double_literal (87)
-    on left: 64, on right: 58 95
-character_literal (88)
-    on left: 65, on right: 59
-boolean_literal (89)
-    on left: 66, on right: 60 86
-invariant_contracts (90)
-    on left: 67, on right: 47
-variant_contracts (91)
-    on left: 68, on right: 49
-contracts_expressions (92)
-    on left: 69 70, on right: 67 68
-expr (93)
-    on left: 71 72 73, on right: 29 38
-bool_exp (94)
-    on left: 74 75, on right: 31 71 74 83
-bool_term (95)
-    on left: 76 77, on right: 74 75 76
-bool_factor (96)
-    on left: 78 79, on right: 76 77 78
-bool_node (97)
-    on left: 80 81 82 83, on right: 78 79 81
-comp_exp (98)
-    on left: 84 85 86, on right: 32 73
-arithmetic_exp (99)
-    on left: 87 88 89, on right: 72 84 88 89 96
-arithmetic_term (100)
-    on left: 90 91 92, on right: 87 88 89 91 92
-arithmetic_factor (101)
-    on left: 93 94 95 96, on right: 90 91 92
+code_section (68)
+    on left: 20 21, on right: 15 21 39 41 43 44 47 51
+code_section_in (69)
+    on left: 22 23 24 25 26, on right: 20 21
+print_function (70)
+    on left: 27, on right: 26
+inside_print (71)
+    on left: 28 29, on right: 27 29
+possible_inside_print (72)
+    on left: 30 31, on right: 28 29
+condition (73)
+    on left: 32, on right: 22
+variable_assignments (74)
+    on left: 33 34, on right: 34 51
+variable_assignment (75)
+    on left: 35 36, on right: 25 34 51
+statement (76)
+    on left: 37 38, on right: 39 41 51 75 76
+if-condition (77)
+    on left: 39, on right: 32
+elseif-condition (78)
+    on left: 40 41, on right: 32 41
+else-condition (79)
+    on left: 42 43, on right: 32
+inspect_structure (80)
+    on left: 44, on right: 23
+when_part_list (81)
+    on left: 45 46, on right: 44 46
+when_part (82)
+    on left: 47, on right: 46
+choices (83)
+    on left: 48 49 50, on right: 47 49
+loops (84)
+    on left: 51, on right: 24
+top_loop (85)
+    on left: 52 53, on right: 51
+bottom_loop (86)
+    on left: 54 55, on right: 51
+comp_operator (87)
+    on left: 56 57 58 59 60, on right: 90 91
+literals (88)
+    on left: 61 62 63 64 65 66, on right: 48 49 50
+integer_literal (89)
+    on left: 67, on right: 61 100
+real_literal (90)
+    on left: 68, on right: 62 101
+string_literal (91)
+    on left: 69, on right: 30 36 63 91
+double_literal (92)
+    on left: 70, on right: 64 102
+character_literal (93)
+    on left: 71, on right: 65
+boolean_literal (94)
+    on left: 72, on right: 66 92
+invariant_contracts (95)
+    on left: 73, on right: 53
+variant_contracts (96)
+    on left: 74, on right: 55
+contracts_expressions (97)
+    on left: 75 76, on right: 73 74
+expr (98)
+    on left: 77 78 79, on right: 35 44
+bool_exp (99)
+    on left: 80 81, on right: 37 77 80 89
+bool_term (100)
+    on left: 82 83, on right: 80 81 82
+bool_factor (101)
+    on left: 84 85, on right: 82 83 84
+bool_node (102)
+    on left: 86 87 88 89, on right: 84 85 87
+comp_exp (103)
+    on left: 90 91 92, on right: 38 79
+arithmetic_exp (104)
+    on left: 93 94 95, on right: 78 90 94 95 103
+arithmetic_term (105)
+    on left: 96 97 98, on right: 93 94 95 97 98
+arithmetic_factor (106)
+    on left: 99 100 101 102 103, on right: 96 97 98
 
 
 State 0
@@ -506,14 +528,16 @@ State 21
     IF          shift, and go to state 28
     INSPECT     shift, and go to state 29
     FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
 
-    code_section         go to state 31
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    code_section         go to state 32
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
 
 
 State 22
@@ -524,7 +548,7 @@ State 22
 
     $default  reduce using rule 9 (inside_feature)
 
-    inside_feature  go to state 38
+    inside_feature  go to state 40
 
 
 State 23
@@ -535,7 +559,7 @@ State 23
 
     $default  reduce using rule 14 (inside_function)
 
-    inside_function  go to state 39
+    inside_function  go to state 41
 
 
 State 24
@@ -543,12 +567,12 @@ State 24
    17 container: IDENTIFIER if_return . SEMICOLON container
    18          | IDENTIFIER if_return . container
 
-    SEMICOLON   shift, and go to state 40
+    SEMICOLON   shift, and go to state 42
     IDENTIFIER  shift, and go to state 18
 
     $default  reduce using rule 16 (container)
 
-    container  go to state 41
+    container  go to state 43
 
 
 State 25
@@ -567,87 +591,94 @@ State 26
 
 State 27
 
-   29 variable_assignment: IDENTIFIER . ASSIGN expr
-   30                    | IDENTIFIER . ASSIGN string_literal
+   35 variable_assignment: IDENTIFIER . ASSIGN expr
+   36                    | IDENTIFIER . ASSIGN string_literal
 
-    ASSIGN  shift, and go to state 42
+    ASSIGN  shift, and go to state 44
 
 
 State 28
 
-   33 if-condition: IF . statement THEN code_section
+   39 if-condition: IF . statement THEN code_section
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 51
+    NOT         shift, and go to state 52
 
-    statement          go to state 51
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    string_literal     go to state 54
-    double_literal     go to state 55
-    boolean_literal    go to state 56
-    bool_exp           go to state 57
-    bool_term          go to state 58
-    bool_factor        go to state 59
-    bool_node          go to state 60
-    comp_exp           go to state 61
-    arithmetic_exp     go to state 62
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    statement          go to state 53
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    string_literal     go to state 56
+    double_literal     go to state 57
+    boolean_literal    go to state 58
+    bool_exp           go to state 59
+    bool_term          go to state 60
+    bool_factor        go to state 61
+    bool_node          go to state 62
+    comp_exp           go to state 63
+    arithmetic_exp     go to state 64
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 29
 
-   38 inspect_structure: INSPECT . expr when_part_list ELSE code_section END
+   44 inspect_structure: INSPECT . expr when_part_list ELSE code_section END
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 51
+    NOT         shift, and go to state 52
 
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    string_literal     go to state 54
-    double_literal     go to state 55
-    boolean_literal    go to state 56
-    expr               go to state 65
-    bool_exp           go to state 66
-    bool_term          go to state 58
-    bool_factor        go to state 59
-    bool_node          go to state 60
-    comp_exp           go to state 67
-    arithmetic_exp     go to state 68
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    string_literal     go to state 56
+    double_literal     go to state 57
+    boolean_literal    go to state 58
+    expr               go to state 67
+    bool_exp           go to state 68
+    bool_term          go to state 60
+    bool_factor        go to state 61
+    bool_node          go to state 62
+    comp_exp           go to state 69
+    arithmetic_exp     go to state 70
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 30
 
-   45 loops: FROM . variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
+   51 loops: FROM . variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
 
     IDENTIFIER  shift, and go to state 27
 
-    variable_assignment  go to state 69
+    variable_assignment  go to state 71
 
 
 State 31
 
-   15 inside_function: DO code_section . END
+   27 print_function: PRINT . OP inside_print CP
 
-    END  shift, and go to state 70
+    OP  shift, and go to state 72
 
 
 State 32
+
+   15 inside_function: DO code_section . END
+
+    END  shift, and go to state 73
+
+
+State 33
 
    20 code_section: code_section_in .
    21             | code_section_in . code_section
@@ -656,63 +687,72 @@ State 32
     IF          shift, and go to state 28
     INSPECT     shift, and go to state 29
     FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
 
     $default  reduce using rule 20 (code_section)
 
-    code_section         go to state 71
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    code_section         go to state 74
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
 
 
-State 33
+State 34
+
+   26 code_section_in: print_function .
+
+    $default  reduce using rule 26 (code_section_in)
+
+
+State 35
 
    22 code_section_in: condition .
 
     $default  reduce using rule 22 (code_section_in)
 
 
-State 34
+State 36
 
    25 code_section_in: variable_assignment .
 
     $default  reduce using rule 25 (code_section_in)
 
 
-State 35
+State 37
 
-   26 condition: if-condition . elseif-condition else-condition END
+   32 condition: if-condition . elseif-condition else-condition END
 
-    $default  reduce using rule 34 (elseif-condition)
+    $default  reduce using rule 40 (elseif-condition)
 
-    elseif-condition  go to state 72
+    elseif-condition  go to state 75
 
 
-State 36
+State 38
 
    23 code_section_in: inspect_structure .
 
     $default  reduce using rule 23 (code_section_in)
 
 
-State 37
+State 39
 
    24 code_section_in: loops .
 
     $default  reduce using rule 24 (code_section_in)
 
 
-State 38
+State 40
 
    10 inside_feature: IDENTIFIER function_head inside_function inside_feature .
 
     $default  reduce using rule 10 (inside_feature)
 
 
-State 39
+State 41
 
    11 inside_feature: IDENTIFIER function_head if_return inside_function . inside_feature
 
@@ -720,10 +760,10 @@ State 39
 
     $default  reduce using rule 9 (inside_feature)
 
-    inside_feature  go to state 73
+    inside_feature  go to state 76
 
 
-State 40
+State 42
 
    17 container: IDENTIFIER if_return SEMICOLON . container
 
@@ -731,1312 +771,1455 @@ State 40
 
     $default  reduce using rule 16 (container)
 
-    container  go to state 74
+    container  go to state 77
 
 
-State 41
+State 43
 
    18 container: IDENTIFIER if_return container .
 
     $default  reduce using rule 18 (container)
 
 
-State 42
-
-   29 variable_assignment: IDENTIFIER ASSIGN . expr
-   30                    | IDENTIFIER ASSIGN . string_literal
-
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
-
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    string_literal     go to state 75
-    double_literal     go to state 55
-    boolean_literal    go to state 56
-    expr               go to state 76
-    bool_exp           go to state 66
-    bool_term          go to state 58
-    bool_factor        go to state 59
-    bool_node          go to state 60
-    comp_exp           go to state 67
-    arithmetic_exp     go to state 68
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
-
-
-State 43
-
-   61 integer_literal: INTEGER .
-
-    $default  reduce using rule 61 (integer_literal)
-
-
 State 44
 
-   62 real_literal: REAL .
+   35 variable_assignment: IDENTIFIER ASSIGN . expr
+   36                    | IDENTIFIER ASSIGN . string_literal
 
-    $default  reduce using rule 62 (real_literal)
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 51
+    NOT         shift, and go to state 52
+
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    string_literal     go to state 78
+    double_literal     go to state 57
+    boolean_literal    go to state 58
+    expr               go to state 79
+    bool_exp           go to state 68
+    bool_term          go to state 60
+    bool_factor        go to state 61
+    bool_node          go to state 62
+    comp_exp           go to state 69
+    arithmetic_exp     go to state 70
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 45
 
-   63 string_literal: STRING .
+   67 integer_literal: INTEGER .
 
-    $default  reduce using rule 63 (string_literal)
+    $default  reduce using rule 67 (integer_literal)
 
 
 State 46
 
-   66 boolean_literal: BOOLEAN .
-   82 bool_node: BOOLEAN .
+   68 real_literal: REAL .
 
-    EQUAL     reduce using rule 66 (boolean_literal)
-    $default  reduce using rule 82 (bool_node)
+    $default  reduce using rule 68 (real_literal)
 
 
 State 47
 
-   64 double_literal: DOUBLE .
+   69 string_literal: STRING .
 
-    $default  reduce using rule 64 (double_literal)
+    $default  reduce using rule 69 (string_literal)
 
 
 State 48
 
-   83 bool_node: OP . bool_exp CP
-   96 arithmetic_factor: OP . arithmetic_exp CP
+   72 boolean_literal: BOOLEAN .
+   88 bool_node: BOOLEAN .
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    BOOLEAN     shift, and go to state 77
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
-
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    double_literal     go to state 55
-    bool_exp           go to state 78
-    bool_term          go to state 58
-    bool_factor        go to state 59
-    bool_node          go to state 60
-    arithmetic_exp     go to state 79
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    EQUAL     reduce using rule 72 (boolean_literal)
+    $default  reduce using rule 88 (bool_node)
 
 
 State 49
 
-   80 bool_node: IDENTIFIER .
+   70 double_literal: DOUBLE .
 
-    $default  reduce using rule 80 (bool_node)
+    $default  reduce using rule 70 (double_literal)
 
 
 State 50
 
-   81 bool_node: NOT . bool_node
+   89 bool_node: OP . bool_exp CP
+  103 arithmetic_factor: OP . arithmetic_exp CP
 
-    BOOLEAN     shift, and go to state 77
-    OP          shift, and go to state 80
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    BOOLEAN     shift, and go to state 80
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 51
+    NOT         shift, and go to state 52
 
-    bool_node  go to state 81
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    double_literal     go to state 57
+    bool_exp           go to state 81
+    bool_term          go to state 60
+    bool_factor        go to state 61
+    bool_node          go to state 62
+    arithmetic_exp     go to state 82
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 51
 
-   33 if-condition: IF statement . THEN code_section
+   86 bool_node: IDENTIFIER .
+   99 arithmetic_factor: IDENTIFIER .
 
-    THEN  shift, and go to state 82
+    CP          reduce using rule 86 (bool_node)
+    CP          [reduce using rule 99 (arithmetic_factor)]
+    EQUAL       reduce using rule 99 (arithmetic_factor)
+    INVARIANT   reduce using rule 86 (bool_node)
+    INVARIANT   [reduce using rule 99 (arithmetic_factor)]
+    VARIANT     reduce using rule 86 (bool_node)
+    VARIANT     [reduce using rule 99 (arithmetic_factor)]
+    IDENTIFIER  reduce using rule 86 (bool_node)
+    IDENTIFIER  [reduce using rule 99 (arithmetic_factor)]
+    END         reduce using rule 86 (bool_node)
+    END         [reduce using rule 99 (arithmetic_factor)]
+    IF          reduce using rule 86 (bool_node)
+    IF          [reduce using rule 99 (arithmetic_factor)]
+    ELSEIF      reduce using rule 86 (bool_node)
+    ELSEIF      [reduce using rule 99 (arithmetic_factor)]
+    ELSE        reduce using rule 86 (bool_node)
+    ELSE        [reduce using rule 99 (arithmetic_factor)]
+    INSPECT     reduce using rule 86 (bool_node)
+    INSPECT     [reduce using rule 99 (arithmetic_factor)]
+    WHEN        reduce using rule 86 (bool_node)
+    WHEN        [reduce using rule 99 (arithmetic_factor)]
+    GTEQ        reduce using rule 99 (arithmetic_factor)
+    LT          reduce using rule 99 (arithmetic_factor)
+    LTEQ        reduce using rule 99 (arithmetic_factor)
+    GT          reduce using rule 99 (arithmetic_factor)
+    FROM        reduce using rule 86 (bool_node)
+    FROM        [reduce using rule 99 (arithmetic_factor)]
+    UNTIL       reduce using rule 86 (bool_node)
+    UNTIL       [reduce using rule 99 (arithmetic_factor)]
+    ADD         reduce using rule 99 (arithmetic_factor)
+    SUB         reduce using rule 99 (arithmetic_factor)
+    MUL         reduce using rule 99 (arithmetic_factor)
+    DIV         reduce using rule 99 (arithmetic_factor)
+    PRINT       reduce using rule 86 (bool_node)
+    PRINT       [reduce using rule 99 (arithmetic_factor)]
+    $default    reduce using rule 86 (bool_node)
 
 
 State 52
 
-   93 arithmetic_factor: integer_literal .
+   87 bool_node: NOT . bool_node
 
-    $default  reduce using rule 93 (arithmetic_factor)
+    BOOLEAN     shift, and go to state 80
+    OP          shift, and go to state 83
+    IDENTIFIER  shift, and go to state 84
+    NOT         shift, and go to state 52
+
+    bool_node  go to state 85
 
 
 State 53
 
-   94 arithmetic_factor: real_literal .
+   39 if-condition: IF statement . THEN code_section
 
-    $default  reduce using rule 94 (arithmetic_factor)
+    THEN  shift, and go to state 86
 
 
 State 54
 
-   85 comp_exp: string_literal . comp_operator string_literal
+  100 arithmetic_factor: integer_literal .
 
-    EQUAL  shift, and go to state 83
-    GTEQ   shift, and go to state 84
-    LT     shift, and go to state 85
-    LTEQ   shift, and go to state 86
-    GT     shift, and go to state 87
-
-    comp_operator  go to state 88
+    $default  reduce using rule 100 (arithmetic_factor)
 
 
 State 55
 
-   95 arithmetic_factor: double_literal .
+  101 arithmetic_factor: real_literal .
 
-    $default  reduce using rule 95 (arithmetic_factor)
+    $default  reduce using rule 101 (arithmetic_factor)
 
 
 State 56
 
-   86 comp_exp: boolean_literal . EQUAL boolean_literal
+   91 comp_exp: string_literal . comp_operator string_literal
 
-    EQUAL  shift, and go to state 89
+    EQUAL  shift, and go to state 87
+    GTEQ   shift, and go to state 88
+    LT     shift, and go to state 89
+    LTEQ   shift, and go to state 90
+    GT     shift, and go to state 91
+
+    comp_operator  go to state 92
 
 
 State 57
 
-   31 statement: bool_exp .
-   74 bool_exp: bool_exp . OR bool_term
+  102 arithmetic_factor: double_literal .
 
-    OR  shift, and go to state 90
-
-    $default  reduce using rule 31 (statement)
+    $default  reduce using rule 102 (arithmetic_factor)
 
 
 State 58
 
-   75 bool_exp: bool_term .
-   76 bool_term: bool_term . AND bool_factor
+   92 comp_exp: boolean_literal . EQUAL boolean_literal
 
-    AND  shift, and go to state 91
-
-    $default  reduce using rule 75 (bool_exp)
+    EQUAL  shift, and go to state 93
 
 
 State 59
 
-   77 bool_term: bool_factor .
-   78 bool_factor: bool_factor . XOR bool_node
+   37 statement: bool_exp .
+   80 bool_exp: bool_exp . OR bool_term
 
-    XOR  shift, and go to state 92
+    OR  shift, and go to state 94
 
-    $default  reduce using rule 77 (bool_term)
+    $default  reduce using rule 37 (statement)
 
 
 State 60
 
-   79 bool_factor: bool_node .
+   81 bool_exp: bool_term .
+   82 bool_term: bool_term . AND bool_factor
 
-    $default  reduce using rule 79 (bool_factor)
+    AND  shift, and go to state 95
+
+    $default  reduce using rule 81 (bool_exp)
 
 
 State 61
 
-   32 statement: comp_exp .
+   83 bool_term: bool_factor .
+   84 bool_factor: bool_factor . XOR bool_node
 
-    $default  reduce using rule 32 (statement)
+    XOR  shift, and go to state 96
+
+    $default  reduce using rule 83 (bool_term)
 
 
 State 62
 
-   84 comp_exp: arithmetic_exp . comp_operator arithmetic_exp
-   88 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
-   89               | arithmetic_exp . SUB arithmetic_term
+   85 bool_factor: bool_node .
 
-    EQUAL  shift, and go to state 83
-    GTEQ   shift, and go to state 84
-    LT     shift, and go to state 85
-    LTEQ   shift, and go to state 86
-    GT     shift, and go to state 87
-    ADD    shift, and go to state 93
-    SUB    shift, and go to state 94
-
-    comp_operator  go to state 95
+    $default  reduce using rule 85 (bool_factor)
 
 
 State 63
 
-   87 arithmetic_exp: arithmetic_term .
-   91 arithmetic_term: arithmetic_term . MUL arithmetic_factor
-   92                | arithmetic_term . DIV arithmetic_factor
+   38 statement: comp_exp .
 
-    MUL  shift, and go to state 96
-    DIV  shift, and go to state 97
-
-    $default  reduce using rule 87 (arithmetic_exp)
+    $default  reduce using rule 38 (statement)
 
 
 State 64
 
-   90 arithmetic_term: arithmetic_factor .
+   90 comp_exp: arithmetic_exp . comp_operator arithmetic_exp
+   94 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
+   95               | arithmetic_exp . SUB arithmetic_term
 
-    $default  reduce using rule 90 (arithmetic_term)
+    EQUAL  shift, and go to state 87
+    GTEQ   shift, and go to state 88
+    LT     shift, and go to state 89
+    LTEQ   shift, and go to state 90
+    GT     shift, and go to state 91
+    ADD    shift, and go to state 97
+    SUB    shift, and go to state 98
+
+    comp_operator  go to state 99
 
 
 State 65
 
-   38 inspect_structure: INSPECT expr . when_part_list ELSE code_section END
+   93 arithmetic_exp: arithmetic_term .
+   97 arithmetic_term: arithmetic_term . MUL arithmetic_factor
+   98                | arithmetic_term . DIV arithmetic_factor
 
-    $default  reduce using rule 39 (when_part_list)
+    MUL  shift, and go to state 100
+    DIV  shift, and go to state 101
 
-    when_part_list  go to state 98
+    $default  reduce using rule 93 (arithmetic_exp)
 
 
 State 66
 
-   71 expr: bool_exp .
-   74 bool_exp: bool_exp . OR bool_term
+   96 arithmetic_term: arithmetic_factor .
 
-    OR  shift, and go to state 90
-
-    $default  reduce using rule 71 (expr)
+    $default  reduce using rule 96 (arithmetic_term)
 
 
 State 67
 
-   73 expr: comp_exp .
+   44 inspect_structure: INSPECT expr . when_part_list ELSE code_section END
 
-    $default  reduce using rule 73 (expr)
+    $default  reduce using rule 45 (when_part_list)
+
+    when_part_list  go to state 102
 
 
 State 68
 
-   72 expr: arithmetic_exp .
-   84 comp_exp: arithmetic_exp . comp_operator arithmetic_exp
-   88 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
-   89               | arithmetic_exp . SUB arithmetic_term
+   77 expr: bool_exp .
+   80 bool_exp: bool_exp . OR bool_term
 
-    EQUAL  shift, and go to state 83
-    GTEQ   shift, and go to state 84
-    LT     shift, and go to state 85
-    LTEQ   shift, and go to state 86
-    GT     shift, and go to state 87
-    ADD    shift, and go to state 93
-    SUB    shift, and go to state 94
+    OR  shift, and go to state 94
 
-    $default  reduce using rule 72 (expr)
-
-    comp_operator  go to state 95
+    $default  reduce using rule 77 (expr)
 
 
 State 69
 
-   45 loops: FROM variable_assignment . variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
+   79 expr: comp_exp .
 
-    $default  reduce using rule 27 (variable_assignments)
-
-    variable_assignments  go to state 99
+    $default  reduce using rule 79 (expr)
 
 
 State 70
+
+   78 expr: arithmetic_exp .
+   90 comp_exp: arithmetic_exp . comp_operator arithmetic_exp
+   94 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
+   95               | arithmetic_exp . SUB arithmetic_term
+
+    EQUAL  shift, and go to state 87
+    GTEQ   shift, and go to state 88
+    LT     shift, and go to state 89
+    LTEQ   shift, and go to state 90
+    GT     shift, and go to state 91
+    ADD    shift, and go to state 97
+    SUB    shift, and go to state 98
+
+    $default  reduce using rule 78 (expr)
+
+    comp_operator  go to state 99
+
+
+State 71
+
+   51 loops: FROM variable_assignment . variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
+
+    $default  reduce using rule 33 (variable_assignments)
+
+    variable_assignments  go to state 103
+
+
+State 72
+
+   27 print_function: PRINT OP . inside_print CP
+
+    STRING      shift, and go to state 47
+    IDENTIFIER  shift, and go to state 104
+
+    inside_print           go to state 105
+    possible_inside_print  go to state 106
+    string_literal         go to state 107
+
+
+State 73
 
    15 inside_function: DO code_section END .
 
     $default  reduce using rule 15 (inside_function)
 
 
-State 71
+State 74
 
    21 code_section: code_section_in code_section .
 
     $default  reduce using rule 21 (code_section)
 
 
-State 72
+State 75
 
-   26 condition: if-condition elseif-condition . else-condition END
-   35 elseif-condition: elseif-condition . ELSEIF statement THEN code_section
+   32 condition: if-condition elseif-condition . else-condition END
+   41 elseif-condition: elseif-condition . ELSEIF statement THEN code_section
 
-    ELSEIF  shift, and go to state 100
-    ELSE    shift, and go to state 101
+    ELSEIF  shift, and go to state 108
+    ELSE    shift, and go to state 109
 
-    $default  reduce using rule 36 (else-condition)
+    $default  reduce using rule 42 (else-condition)
 
-    else-condition  go to state 102
+    else-condition  go to state 110
 
 
-State 73
+State 76
 
    11 inside_feature: IDENTIFIER function_head if_return inside_function inside_feature .
 
     $default  reduce using rule 11 (inside_feature)
 
 
-State 74
+State 77
 
    17 container: IDENTIFIER if_return SEMICOLON container .
 
     $default  reduce using rule 17 (container)
 
 
-State 75
-
-   30 variable_assignment: IDENTIFIER ASSIGN string_literal .
-   85 comp_exp: string_literal . comp_operator string_literal
-
-    EQUAL  shift, and go to state 83
-    GTEQ   shift, and go to state 84
-    LT     shift, and go to state 85
-    LTEQ   shift, and go to state 86
-    GT     shift, and go to state 87
-
-    $default  reduce using rule 30 (variable_assignment)
-
-    comp_operator  go to state 88
-
-
-State 76
-
-   29 variable_assignment: IDENTIFIER ASSIGN expr .
-
-    $default  reduce using rule 29 (variable_assignment)
-
-
-State 77
-
-   82 bool_node: BOOLEAN .
-
-    $default  reduce using rule 82 (bool_node)
-
-
 State 78
 
-   74 bool_exp: bool_exp . OR bool_term
-   83 bool_node: OP bool_exp . CP
+   36 variable_assignment: IDENTIFIER ASSIGN string_literal .
+   91 comp_exp: string_literal . comp_operator string_literal
 
-    CP  shift, and go to state 103
-    OR  shift, and go to state 90
+    EQUAL  shift, and go to state 87
+    GTEQ   shift, and go to state 88
+    LT     shift, and go to state 89
+    LTEQ   shift, and go to state 90
+    GT     shift, and go to state 91
+
+    $default  reduce using rule 36 (variable_assignment)
+
+    comp_operator  go to state 92
 
 
 State 79
 
-   88 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
-   89               | arithmetic_exp . SUB arithmetic_term
-   96 arithmetic_factor: OP arithmetic_exp . CP
+   35 variable_assignment: IDENTIFIER ASSIGN expr .
 
-    CP   shift, and go to state 104
-    ADD  shift, and go to state 93
-    SUB  shift, and go to state 94
+    $default  reduce using rule 35 (variable_assignment)
 
 
 State 80
 
-   83 bool_node: OP . bool_exp CP
+   88 bool_node: BOOLEAN .
 
-    BOOLEAN     shift, and go to state 77
-    OP          shift, and go to state 80
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
-
-    bool_exp     go to state 78
-    bool_term    go to state 58
-    bool_factor  go to state 59
-    bool_node    go to state 60
+    $default  reduce using rule 88 (bool_node)
 
 
 State 81
 
-   81 bool_node: NOT bool_node .
+   80 bool_exp: bool_exp . OR bool_term
+   89 bool_node: OP bool_exp . CP
 
-    $default  reduce using rule 81 (bool_node)
+    CP  shift, and go to state 111
+    OR  shift, and go to state 94
 
 
 State 82
 
-   33 if-condition: IF statement THEN . code_section
+   94 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
+   95               | arithmetic_exp . SUB arithmetic_term
+  103 arithmetic_factor: OP arithmetic_exp . CP
 
-    IDENTIFIER  shift, and go to state 27
-    IF          shift, and go to state 28
-    INSPECT     shift, and go to state 29
-    FROM        shift, and go to state 30
-
-    code_section         go to state 105
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    CP   shift, and go to state 112
+    ADD  shift, and go to state 97
+    SUB  shift, and go to state 98
 
 
 State 83
 
-   54 comp_operator: EQUAL .
+   89 bool_node: OP . bool_exp CP
 
-    $default  reduce using rule 54 (comp_operator)
+    BOOLEAN     shift, and go to state 80
+    OP          shift, and go to state 83
+    IDENTIFIER  shift, and go to state 84
+    NOT         shift, and go to state 52
+
+    bool_exp     go to state 81
+    bool_term    go to state 60
+    bool_factor  go to state 61
+    bool_node    go to state 62
 
 
 State 84
 
-   51 comp_operator: GTEQ .
+   86 bool_node: IDENTIFIER .
 
-    $default  reduce using rule 51 (comp_operator)
+    $default  reduce using rule 86 (bool_node)
 
 
 State 85
 
-   52 comp_operator: LT .
+   87 bool_node: NOT bool_node .
 
-    $default  reduce using rule 52 (comp_operator)
+    $default  reduce using rule 87 (bool_node)
 
 
 State 86
 
-   53 comp_operator: LTEQ .
+   39 if-condition: IF statement THEN . code_section
 
-    $default  reduce using rule 53 (comp_operator)
+    IDENTIFIER  shift, and go to state 27
+    IF          shift, and go to state 28
+    INSPECT     shift, and go to state 29
+    FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
+
+    code_section         go to state 113
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
 
 
 State 87
 
-   50 comp_operator: GT .
+   60 comp_operator: EQUAL .
 
-    $default  reduce using rule 50 (comp_operator)
+    $default  reduce using rule 60 (comp_operator)
 
 
 State 88
 
-   85 comp_exp: string_literal comp_operator . string_literal
+   57 comp_operator: GTEQ .
 
-    STRING  shift, and go to state 45
-
-    string_literal  go to state 106
+    $default  reduce using rule 57 (comp_operator)
 
 
 State 89
 
-   86 comp_exp: boolean_literal EQUAL . boolean_literal
+   58 comp_operator: LT .
 
-    BOOLEAN  shift, and go to state 107
-
-    boolean_literal  go to state 108
+    $default  reduce using rule 58 (comp_operator)
 
 
 State 90
 
-   74 bool_exp: bool_exp OR . bool_term
+   59 comp_operator: LTEQ .
 
-    BOOLEAN     shift, and go to state 77
-    OP          shift, and go to state 80
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
-
-    bool_term    go to state 109
-    bool_factor  go to state 59
-    bool_node    go to state 60
+    $default  reduce using rule 59 (comp_operator)
 
 
 State 91
 
-   76 bool_term: bool_term AND . bool_factor
+   56 comp_operator: GT .
 
-    BOOLEAN     shift, and go to state 77
-    OP          shift, and go to state 80
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
-
-    bool_factor  go to state 110
-    bool_node    go to state 60
+    $default  reduce using rule 56 (comp_operator)
 
 
 State 92
 
-   78 bool_factor: bool_factor XOR . bool_node
+   91 comp_exp: string_literal comp_operator . string_literal
 
-    BOOLEAN     shift, and go to state 77
-    OP          shift, and go to state 80
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
+    STRING  shift, and go to state 47
 
-    bool_node  go to state 111
+    string_literal  go to state 114
 
 
 State 93
 
-   88 arithmetic_exp: arithmetic_exp ADD . arithmetic_term
+   92 comp_exp: boolean_literal EQUAL . boolean_literal
 
-    INTEGER  shift, and go to state 43
-    REAL     shift, and go to state 44
-    DOUBLE   shift, and go to state 47
-    OP       shift, and go to state 112
+    BOOLEAN  shift, and go to state 115
 
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    double_literal     go to state 55
-    arithmetic_term    go to state 113
-    arithmetic_factor  go to state 64
+    boolean_literal  go to state 116
 
 
 State 94
 
-   89 arithmetic_exp: arithmetic_exp SUB . arithmetic_term
+   80 bool_exp: bool_exp OR . bool_term
 
-    INTEGER  shift, and go to state 43
-    REAL     shift, and go to state 44
-    DOUBLE   shift, and go to state 47
-    OP       shift, and go to state 112
+    BOOLEAN     shift, and go to state 80
+    OP          shift, and go to state 83
+    IDENTIFIER  shift, and go to state 84
+    NOT         shift, and go to state 52
 
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    double_literal     go to state 55
-    arithmetic_term    go to state 114
-    arithmetic_factor  go to state 64
+    bool_term    go to state 117
+    bool_factor  go to state 61
+    bool_node    go to state 62
 
 
 State 95
 
-   84 comp_exp: arithmetic_exp comp_operator . arithmetic_exp
+   82 bool_term: bool_term AND . bool_factor
 
-    INTEGER  shift, and go to state 43
-    REAL     shift, and go to state 44
-    DOUBLE   shift, and go to state 47
-    OP       shift, and go to state 112
+    BOOLEAN     shift, and go to state 80
+    OP          shift, and go to state 83
+    IDENTIFIER  shift, and go to state 84
+    NOT         shift, and go to state 52
 
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    double_literal     go to state 55
-    arithmetic_exp     go to state 115
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    bool_factor  go to state 118
+    bool_node    go to state 62
 
 
 State 96
 
-   91 arithmetic_term: arithmetic_term MUL . arithmetic_factor
+   84 bool_factor: bool_factor XOR . bool_node
 
-    INTEGER  shift, and go to state 43
-    REAL     shift, and go to state 44
-    DOUBLE   shift, and go to state 47
-    OP       shift, and go to state 112
+    BOOLEAN     shift, and go to state 80
+    OP          shift, and go to state 83
+    IDENTIFIER  shift, and go to state 84
+    NOT         shift, and go to state 52
 
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    double_literal     go to state 55
-    arithmetic_factor  go to state 116
+    bool_node  go to state 119
 
 
 State 97
 
-   92 arithmetic_term: arithmetic_term DIV . arithmetic_factor
+   94 arithmetic_exp: arithmetic_exp ADD . arithmetic_term
 
-    INTEGER  shift, and go to state 43
-    REAL     shift, and go to state 44
-    DOUBLE   shift, and go to state 47
-    OP       shift, and go to state 112
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 120
+    IDENTIFIER  shift, and go to state 121
 
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    double_literal     go to state 55
-    arithmetic_factor  go to state 117
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    double_literal     go to state 57
+    arithmetic_term    go to state 122
+    arithmetic_factor  go to state 66
 
 
 State 98
 
-   38 inspect_structure: INSPECT expr when_part_list . ELSE code_section END
-   40 when_part_list: when_part_list . when_part
+   95 arithmetic_exp: arithmetic_exp SUB . arithmetic_term
 
-    ELSE  shift, and go to state 118
-    WHEN  shift, and go to state 119
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 120
+    IDENTIFIER  shift, and go to state 121
 
-    when_part  go to state 120
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    double_literal     go to state 57
+    arithmetic_term    go to state 123
+    arithmetic_factor  go to state 66
 
 
 State 99
 
-   28 variable_assignments: variable_assignments . variable_assignment
-   45 loops: FROM variable_assignment variable_assignments . top_loop UNTIL statement LOOP code_section bottom_loop END
+   90 comp_exp: arithmetic_exp comp_operator . arithmetic_exp
 
-    INVARIANT   shift, and go to state 121
-    IDENTIFIER  shift, and go to state 27
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 120
+    IDENTIFIER  shift, and go to state 121
 
-    $default  reduce using rule 46 (top_loop)
-
-    variable_assignment  go to state 122
-    top_loop             go to state 123
-    invariant_contracts  go to state 124
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    double_literal     go to state 57
+    arithmetic_exp     go to state 124
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 100
 
-   35 elseif-condition: elseif-condition ELSEIF . statement THEN code_section
+   97 arithmetic_term: arithmetic_term MUL . arithmetic_factor
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 120
+    IDENTIFIER  shift, and go to state 121
 
-    statement          go to state 125
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    string_literal     go to state 54
-    double_literal     go to state 55
-    boolean_literal    go to state 56
-    bool_exp           go to state 57
-    bool_term          go to state 58
-    bool_factor        go to state 59
-    bool_node          go to state 60
-    comp_exp           go to state 61
-    arithmetic_exp     go to state 62
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    double_literal     go to state 57
+    arithmetic_factor  go to state 125
 
 
 State 101
 
-   37 else-condition: ELSE . code_section
+   98 arithmetic_term: arithmetic_term DIV . arithmetic_factor
 
-    IDENTIFIER  shift, and go to state 27
-    IF          shift, and go to state 28
-    INSPECT     shift, and go to state 29
-    FROM        shift, and go to state 30
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 120
+    IDENTIFIER  shift, and go to state 121
 
-    code_section         go to state 126
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    double_literal     go to state 57
+    arithmetic_factor  go to state 126
 
 
 State 102
 
-   26 condition: if-condition elseif-condition else-condition . END
+   44 inspect_structure: INSPECT expr when_part_list . ELSE code_section END
+   46 when_part_list: when_part_list . when_part
 
-    END  shift, and go to state 127
+    ELSE  shift, and go to state 127
+    WHEN  shift, and go to state 128
+
+    when_part  go to state 129
 
 
 State 103
 
-   83 bool_node: OP bool_exp CP .
+   34 variable_assignments: variable_assignments . variable_assignment
+   51 loops: FROM variable_assignment variable_assignments . top_loop UNTIL statement LOOP code_section bottom_loop END
 
-    $default  reduce using rule 83 (bool_node)
+    INVARIANT   shift, and go to state 130
+    IDENTIFIER  shift, and go to state 27
+
+    $default  reduce using rule 52 (top_loop)
+
+    variable_assignment  go to state 131
+    top_loop             go to state 132
+    invariant_contracts  go to state 133
 
 
 State 104
 
-   96 arithmetic_factor: OP arithmetic_exp CP .
+   31 possible_inside_print: IDENTIFIER .
 
-    $default  reduce using rule 96 (arithmetic_factor)
+    $default  reduce using rule 31 (possible_inside_print)
 
 
 State 105
 
-   33 if-condition: IF statement THEN code_section .
+   27 print_function: PRINT OP inside_print . CP
 
-    $default  reduce using rule 33 (if-condition)
+    CP  shift, and go to state 134
 
 
 State 106
 
-   85 comp_exp: string_literal comp_operator string_literal .
+   28 inside_print: possible_inside_print .
+   29             | possible_inside_print . ADD inside_print
 
-    $default  reduce using rule 85 (comp_exp)
+    ADD  shift, and go to state 135
+
+    $default  reduce using rule 28 (inside_print)
 
 
 State 107
 
-   66 boolean_literal: BOOLEAN .
+   30 possible_inside_print: string_literal .
 
-    $default  reduce using rule 66 (boolean_literal)
+    $default  reduce using rule 30 (possible_inside_print)
 
 
 State 108
 
-   86 comp_exp: boolean_literal EQUAL boolean_literal .
+   41 elseif-condition: elseif-condition ELSEIF . statement THEN code_section
 
-    $default  reduce using rule 86 (comp_exp)
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 51
+    NOT         shift, and go to state 52
+
+    statement          go to state 136
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    string_literal     go to state 56
+    double_literal     go to state 57
+    boolean_literal    go to state 58
+    bool_exp           go to state 59
+    bool_term          go to state 60
+    bool_factor        go to state 61
+    bool_node          go to state 62
+    comp_exp           go to state 63
+    arithmetic_exp     go to state 64
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 109
 
-   74 bool_exp: bool_exp OR bool_term .
-   76 bool_term: bool_term . AND bool_factor
+   43 else-condition: ELSE . code_section
 
-    AND  shift, and go to state 91
+    IDENTIFIER  shift, and go to state 27
+    IF          shift, and go to state 28
+    INSPECT     shift, and go to state 29
+    FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
 
-    $default  reduce using rule 74 (bool_exp)
+    code_section         go to state 137
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
 
 
 State 110
 
-   76 bool_term: bool_term AND bool_factor .
-   78 bool_factor: bool_factor . XOR bool_node
+   32 condition: if-condition elseif-condition else-condition . END
 
-    XOR  shift, and go to state 92
-
-    $default  reduce using rule 76 (bool_term)
+    END  shift, and go to state 138
 
 
 State 111
 
-   78 bool_factor: bool_factor XOR bool_node .
+   89 bool_node: OP bool_exp CP .
 
-    $default  reduce using rule 78 (bool_factor)
+    $default  reduce using rule 89 (bool_node)
 
 
 State 112
 
-   96 arithmetic_factor: OP . arithmetic_exp CP
+  103 arithmetic_factor: OP arithmetic_exp CP .
 
-    INTEGER  shift, and go to state 43
-    REAL     shift, and go to state 44
-    DOUBLE   shift, and go to state 47
-    OP       shift, and go to state 112
-
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    double_literal     go to state 55
-    arithmetic_exp     go to state 79
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    $default  reduce using rule 103 (arithmetic_factor)
 
 
 State 113
 
-   88 arithmetic_exp: arithmetic_exp ADD arithmetic_term .
-   91 arithmetic_term: arithmetic_term . MUL arithmetic_factor
-   92                | arithmetic_term . DIV arithmetic_factor
+   39 if-condition: IF statement THEN code_section .
 
-    MUL  shift, and go to state 96
-    DIV  shift, and go to state 97
-
-    $default  reduce using rule 88 (arithmetic_exp)
+    $default  reduce using rule 39 (if-condition)
 
 
 State 114
 
-   89 arithmetic_exp: arithmetic_exp SUB arithmetic_term .
-   91 arithmetic_term: arithmetic_term . MUL arithmetic_factor
-   92                | arithmetic_term . DIV arithmetic_factor
+   91 comp_exp: string_literal comp_operator string_literal .
 
-    MUL  shift, and go to state 96
-    DIV  shift, and go to state 97
-
-    $default  reduce using rule 89 (arithmetic_exp)
+    $default  reduce using rule 91 (comp_exp)
 
 
 State 115
 
-   84 comp_exp: arithmetic_exp comp_operator arithmetic_exp .
-   88 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
-   89               | arithmetic_exp . SUB arithmetic_term
+   72 boolean_literal: BOOLEAN .
 
-    ADD  shift, and go to state 93
-    SUB  shift, and go to state 94
-
-    $default  reduce using rule 84 (comp_exp)
+    $default  reduce using rule 72 (boolean_literal)
 
 
 State 116
 
-   91 arithmetic_term: arithmetic_term MUL arithmetic_factor .
+   92 comp_exp: boolean_literal EQUAL boolean_literal .
 
-    $default  reduce using rule 91 (arithmetic_term)
+    $default  reduce using rule 92 (comp_exp)
 
 
 State 117
 
-   92 arithmetic_term: arithmetic_term DIV arithmetic_factor .
+   80 bool_exp: bool_exp OR bool_term .
+   82 bool_term: bool_term . AND bool_factor
 
-    $default  reduce using rule 92 (arithmetic_term)
+    AND  shift, and go to state 95
+
+    $default  reduce using rule 80 (bool_exp)
 
 
 State 118
 
-   38 inspect_structure: INSPECT expr when_part_list ELSE . code_section END
+   82 bool_term: bool_term AND bool_factor .
+   84 bool_factor: bool_factor . XOR bool_node
 
-    IDENTIFIER  shift, and go to state 27
-    IF          shift, and go to state 28
-    INSPECT     shift, and go to state 29
-    FROM        shift, and go to state 30
+    XOR  shift, and go to state 96
 
-    code_section         go to state 128
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    $default  reduce using rule 82 (bool_term)
 
 
 State 119
 
-   41 when_part: WHEN . choices THEN code_section
+   84 bool_factor: bool_factor XOR bool_node .
 
-    INTEGER    shift, and go to state 43
-    REAL       shift, and go to state 44
-    STRING     shift, and go to state 45
-    BOOLEAN    shift, and go to state 107
-    CHARACTER  shift, and go to state 129
-    DOUBLE     shift, and go to state 47
-
-    choices            go to state 130
-    literals           go to state 131
-    integer_literal    go to state 132
-    real_literal       go to state 133
-    string_literal     go to state 134
-    double_literal     go to state 135
-    character_literal  go to state 136
-    boolean_literal    go to state 137
+    $default  reduce using rule 84 (bool_factor)
 
 
 State 120
 
-   40 when_part_list: when_part_list when_part .
+  103 arithmetic_factor: OP . arithmetic_exp CP
 
-    $default  reduce using rule 40 (when_part_list)
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 120
+    IDENTIFIER  shift, and go to state 121
+
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    double_literal     go to state 57
+    arithmetic_exp     go to state 82
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 121
 
-   67 invariant_contracts: INVARIANT . contracts_expressions
+   99 arithmetic_factor: IDENTIFIER .
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 138
-    NOT         shift, and go to state 50
-
-    statement              go to state 139
-    integer_literal        go to state 52
-    real_literal           go to state 53
-    string_literal         go to state 54
-    double_literal         go to state 55
-    boolean_literal        go to state 56
-    contracts_expressions  go to state 140
-    bool_exp               go to state 57
-    bool_term              go to state 58
-    bool_factor            go to state 59
-    bool_node              go to state 60
-    comp_exp               go to state 61
-    arithmetic_exp         go to state 62
-    arithmetic_term        go to state 63
-    arithmetic_factor      go to state 64
+    $default  reduce using rule 99 (arithmetic_factor)
 
 
 State 122
 
-   28 variable_assignments: variable_assignments variable_assignment .
+   94 arithmetic_exp: arithmetic_exp ADD arithmetic_term .
+   97 arithmetic_term: arithmetic_term . MUL arithmetic_factor
+   98                | arithmetic_term . DIV arithmetic_factor
 
-    $default  reduce using rule 28 (variable_assignments)
+    MUL  shift, and go to state 100
+    DIV  shift, and go to state 101
+
+    $default  reduce using rule 94 (arithmetic_exp)
 
 
 State 123
 
-   45 loops: FROM variable_assignment variable_assignments top_loop . UNTIL statement LOOP code_section bottom_loop END
+   95 arithmetic_exp: arithmetic_exp SUB arithmetic_term .
+   97 arithmetic_term: arithmetic_term . MUL arithmetic_factor
+   98                | arithmetic_term . DIV arithmetic_factor
 
-    UNTIL  shift, and go to state 141
+    MUL  shift, and go to state 100
+    DIV  shift, and go to state 101
+
+    $default  reduce using rule 95 (arithmetic_exp)
 
 
 State 124
 
-   47 top_loop: invariant_contracts .
+   90 comp_exp: arithmetic_exp comp_operator arithmetic_exp .
+   94 arithmetic_exp: arithmetic_exp . ADD arithmetic_term
+   95               | arithmetic_exp . SUB arithmetic_term
 
-    $default  reduce using rule 47 (top_loop)
+    ADD  shift, and go to state 97
+    SUB  shift, and go to state 98
+
+    $default  reduce using rule 90 (comp_exp)
 
 
 State 125
 
-   35 elseif-condition: elseif-condition ELSEIF statement . THEN code_section
+   97 arithmetic_term: arithmetic_term MUL arithmetic_factor .
 
-    THEN  shift, and go to state 142
+    $default  reduce using rule 97 (arithmetic_term)
 
 
 State 126
 
-   37 else-condition: ELSE code_section .
+   98 arithmetic_term: arithmetic_term DIV arithmetic_factor .
 
-    $default  reduce using rule 37 (else-condition)
+    $default  reduce using rule 98 (arithmetic_term)
 
 
 State 127
 
-   26 condition: if-condition elseif-condition else-condition END .
+   44 inspect_structure: INSPECT expr when_part_list ELSE . code_section END
 
-    $default  reduce using rule 26 (condition)
+    IDENTIFIER  shift, and go to state 27
+    IF          shift, and go to state 28
+    INSPECT     shift, and go to state 29
+    FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
+
+    code_section         go to state 139
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
 
 
 State 128
 
-   38 inspect_structure: INSPECT expr when_part_list ELSE code_section . END
+   47 when_part: WHEN . choices THEN code_section
 
-    END  shift, and go to state 143
+    INTEGER    shift, and go to state 45
+    REAL       shift, and go to state 46
+    STRING     shift, and go to state 47
+    BOOLEAN    shift, and go to state 115
+    CHARACTER  shift, and go to state 140
+    DOUBLE     shift, and go to state 49
+
+    choices            go to state 141
+    literals           go to state 142
+    integer_literal    go to state 143
+    real_literal       go to state 144
+    string_literal     go to state 145
+    double_literal     go to state 146
+    character_literal  go to state 147
+    boolean_literal    go to state 148
 
 
 State 129
 
-   65 character_literal: CHARACTER .
+   46 when_part_list: when_part_list when_part .
 
-    $default  reduce using rule 65 (character_literal)
+    $default  reduce using rule 46 (when_part_list)
 
 
 State 130
 
-   41 when_part: WHEN choices . THEN code_section
+   73 invariant_contracts: INVARIANT . contracts_expressions
 
-    THEN  shift, and go to state 144
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 149
+    NOT         shift, and go to state 52
+
+    statement              go to state 150
+    integer_literal        go to state 54
+    real_literal           go to state 55
+    string_literal         go to state 56
+    double_literal         go to state 57
+    boolean_literal        go to state 58
+    contracts_expressions  go to state 151
+    bool_exp               go to state 59
+    bool_term              go to state 60
+    bool_factor            go to state 61
+    bool_node              go to state 62
+    comp_exp               go to state 63
+    arithmetic_exp         go to state 64
+    arithmetic_term        go to state 65
+    arithmetic_factor      go to state 66
 
 
 State 131
 
-   42 choices: literals .
-   43        | literals . COMMA choices
-   44        | literals . DOTS literals
+   34 variable_assignments: variable_assignments variable_assignment .
 
-    COMMA  shift, and go to state 145
-    DOTS   shift, and go to state 146
-
-    $default  reduce using rule 42 (choices)
+    $default  reduce using rule 34 (variable_assignments)
 
 
 State 132
 
-   55 literals: integer_literal .
+   51 loops: FROM variable_assignment variable_assignments top_loop . UNTIL statement LOOP code_section bottom_loop END
 
-    $default  reduce using rule 55 (literals)
+    UNTIL  shift, and go to state 152
 
 
 State 133
 
-   56 literals: real_literal .
+   53 top_loop: invariant_contracts .
 
-    $default  reduce using rule 56 (literals)
+    $default  reduce using rule 53 (top_loop)
 
 
 State 134
 
-   57 literals: string_literal .
+   27 print_function: PRINT OP inside_print CP .
 
-    $default  reduce using rule 57 (literals)
+    $default  reduce using rule 27 (print_function)
 
 
 State 135
 
-   58 literals: double_literal .
+   29 inside_print: possible_inside_print ADD . inside_print
 
-    $default  reduce using rule 58 (literals)
+    STRING      shift, and go to state 47
+    IDENTIFIER  shift, and go to state 104
+
+    inside_print           go to state 153
+    possible_inside_print  go to state 106
+    string_literal         go to state 107
 
 
 State 136
 
-   59 literals: character_literal .
+   41 elseif-condition: elseif-condition ELSEIF statement . THEN code_section
 
-    $default  reduce using rule 59 (literals)
+    THEN  shift, and go to state 154
 
 
 State 137
 
-   60 literals: boolean_literal .
+   43 else-condition: ELSE code_section .
 
-    $default  reduce using rule 60 (literals)
+    $default  reduce using rule 43 (else-condition)
 
 
 State 138
 
-   69 contracts_expressions: IDENTIFIER . COLON statement
-   80 bool_node: IDENTIFIER .
+   32 condition: if-condition elseif-condition else-condition END .
 
-    COLON  shift, and go to state 147
-
-    $default  reduce using rule 80 (bool_node)
+    $default  reduce using rule 32 (condition)
 
 
 State 139
 
-   70 contracts_expressions: statement .
+   44 inspect_structure: INSPECT expr when_part_list ELSE code_section . END
 
-    $default  reduce using rule 70 (contracts_expressions)
+    END  shift, and go to state 155
 
 
 State 140
 
-   67 invariant_contracts: INVARIANT contracts_expressions .
+   71 character_literal: CHARACTER .
 
-    $default  reduce using rule 67 (invariant_contracts)
+    $default  reduce using rule 71 (character_literal)
 
 
 State 141
 
-   45 loops: FROM variable_assignment variable_assignments top_loop UNTIL . statement LOOP code_section bottom_loop END
+   47 when_part: WHEN choices . THEN code_section
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
-
-    statement          go to state 148
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    string_literal     go to state 54
-    double_literal     go to state 55
-    boolean_literal    go to state 56
-    bool_exp           go to state 57
-    bool_term          go to state 58
-    bool_factor        go to state 59
-    bool_node          go to state 60
-    comp_exp           go to state 61
-    arithmetic_exp     go to state 62
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    THEN  shift, and go to state 156
 
 
 State 142
 
-   35 elseif-condition: elseif-condition ELSEIF statement THEN . code_section
+   48 choices: literals .
+   49        | literals . COMMA choices
+   50        | literals . DOTS literals
 
-    IDENTIFIER  shift, and go to state 27
-    IF          shift, and go to state 28
-    INSPECT     shift, and go to state 29
-    FROM        shift, and go to state 30
+    COMMA  shift, and go to state 157
+    DOTS   shift, and go to state 158
 
-    code_section         go to state 149
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    $default  reduce using rule 48 (choices)
 
 
 State 143
 
-   38 inspect_structure: INSPECT expr when_part_list ELSE code_section END .
+   61 literals: integer_literal .
 
-    $default  reduce using rule 38 (inspect_structure)
+    $default  reduce using rule 61 (literals)
 
 
 State 144
 
-   41 when_part: WHEN choices THEN . code_section
+   62 literals: real_literal .
 
-    IDENTIFIER  shift, and go to state 27
-    IF          shift, and go to state 28
-    INSPECT     shift, and go to state 29
-    FROM        shift, and go to state 30
-
-    code_section         go to state 150
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    $default  reduce using rule 62 (literals)
 
 
 State 145
 
-   43 choices: literals COMMA . choices
+   63 literals: string_literal .
 
-    INTEGER    shift, and go to state 43
-    REAL       shift, and go to state 44
-    STRING     shift, and go to state 45
-    BOOLEAN    shift, and go to state 107
-    CHARACTER  shift, and go to state 129
-    DOUBLE     shift, and go to state 47
-
-    choices            go to state 151
-    literals           go to state 131
-    integer_literal    go to state 132
-    real_literal       go to state 133
-    string_literal     go to state 134
-    double_literal     go to state 135
-    character_literal  go to state 136
-    boolean_literal    go to state 137
+    $default  reduce using rule 63 (literals)
 
 
 State 146
 
-   44 choices: literals DOTS . literals
+   64 literals: double_literal .
 
-    INTEGER    shift, and go to state 43
-    REAL       shift, and go to state 44
-    STRING     shift, and go to state 45
-    BOOLEAN    shift, and go to state 107
-    CHARACTER  shift, and go to state 129
-    DOUBLE     shift, and go to state 47
-
-    literals           go to state 152
-    integer_literal    go to state 132
-    real_literal       go to state 133
-    string_literal     go to state 134
-    double_literal     go to state 135
-    character_literal  go to state 136
-    boolean_literal    go to state 137
+    $default  reduce using rule 64 (literals)
 
 
 State 147
 
-   69 contracts_expressions: IDENTIFIER COLON . statement
+   65 literals: character_literal .
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 49
-    NOT         shift, and go to state 50
-
-    statement          go to state 153
-    integer_literal    go to state 52
-    real_literal       go to state 53
-    string_literal     go to state 54
-    double_literal     go to state 55
-    boolean_literal    go to state 56
-    bool_exp           go to state 57
-    bool_term          go to state 58
-    bool_factor        go to state 59
-    bool_node          go to state 60
-    comp_exp           go to state 61
-    arithmetic_exp     go to state 62
-    arithmetic_term    go to state 63
-    arithmetic_factor  go to state 64
+    $default  reduce using rule 65 (literals)
 
 
 State 148
 
-   45 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement . LOOP code_section bottom_loop END
+   66 literals: boolean_literal .
 
-    LOOP  shift, and go to state 154
+    $default  reduce using rule 66 (literals)
 
 
 State 149
 
-   35 elseif-condition: elseif-condition ELSEIF statement THEN code_section .
+   75 contracts_expressions: IDENTIFIER . COLON statement
+   86 bool_node: IDENTIFIER .
+   99 arithmetic_factor: IDENTIFIER .
 
-    $default  reduce using rule 35 (elseif-condition)
+    COLON  shift, and go to state 159
+
+    END       reduce using rule 86 (bool_node)
+    UNTIL     reduce using rule 86 (bool_node)
+    AND       reduce using rule 86 (bool_node)
+    OR        reduce using rule 86 (bool_node)
+    XOR       reduce using rule 86 (bool_node)
+    $default  reduce using rule 99 (arithmetic_factor)
 
 
 State 150
 
-   41 when_part: WHEN choices THEN code_section .
+   76 contracts_expressions: statement .
 
-    $default  reduce using rule 41 (when_part)
+    $default  reduce using rule 76 (contracts_expressions)
 
 
 State 151
 
-   43 choices: literals COMMA choices .
+   73 invariant_contracts: INVARIANT contracts_expressions .
 
-    $default  reduce using rule 43 (choices)
+    $default  reduce using rule 73 (invariant_contracts)
 
 
 State 152
 
-   44 choices: literals DOTS literals .
+   51 loops: FROM variable_assignment variable_assignments top_loop UNTIL . statement LOOP code_section bottom_loop END
 
-    $default  reduce using rule 44 (choices)
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 51
+    NOT         shift, and go to state 52
+
+    statement          go to state 160
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    string_literal     go to state 56
+    double_literal     go to state 57
+    boolean_literal    go to state 58
+    bool_exp           go to state 59
+    bool_term          go to state 60
+    bool_factor        go to state 61
+    bool_node          go to state 62
+    comp_exp           go to state 63
+    arithmetic_exp     go to state 64
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 153
 
-   69 contracts_expressions: IDENTIFIER COLON statement .
+   29 inside_print: possible_inside_print ADD inside_print .
 
-    $default  reduce using rule 69 (contracts_expressions)
+    $default  reduce using rule 29 (inside_print)
 
 
 State 154
 
-   45 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP . code_section bottom_loop END
+   41 elseif-condition: elseif-condition ELSEIF statement THEN . code_section
 
     IDENTIFIER  shift, and go to state 27
     IF          shift, and go to state 28
     INSPECT     shift, and go to state 29
     FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
 
-    code_section         go to state 155
-    code_section_in      go to state 32
-    condition            go to state 33
-    variable_assignment  go to state 34
-    if-condition         go to state 35
-    inspect_structure    go to state 36
-    loops                go to state 37
+    code_section         go to state 161
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
 
 
 State 155
 
-   45 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section . bottom_loop END
+   44 inspect_structure: INSPECT expr when_part_list ELSE code_section END .
 
-    VARIANT  shift, and go to state 156
-
-    $default  reduce using rule 48 (bottom_loop)
-
-    bottom_loop        go to state 157
-    variant_contracts  go to state 158
+    $default  reduce using rule 44 (inspect_structure)
 
 
 State 156
 
-   68 variant_contracts: VARIANT . contracts_expressions
+   47 when_part: WHEN choices THEN . code_section
 
-    INTEGER     shift, and go to state 43
-    REAL        shift, and go to state 44
-    STRING      shift, and go to state 45
-    BOOLEAN     shift, and go to state 46
-    DOUBLE      shift, and go to state 47
-    OP          shift, and go to state 48
-    IDENTIFIER  shift, and go to state 138
-    NOT         shift, and go to state 50
+    IDENTIFIER  shift, and go to state 27
+    IF          shift, and go to state 28
+    INSPECT     shift, and go to state 29
+    FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
 
-    statement              go to state 139
-    integer_literal        go to state 52
-    real_literal           go to state 53
-    string_literal         go to state 54
-    double_literal         go to state 55
-    boolean_literal        go to state 56
-    contracts_expressions  go to state 159
-    bool_exp               go to state 57
-    bool_term              go to state 58
-    bool_factor            go to state 59
-    bool_node              go to state 60
-    comp_exp               go to state 61
-    arithmetic_exp         go to state 62
-    arithmetic_term        go to state 63
-    arithmetic_factor      go to state 64
+    code_section         go to state 162
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
 
 
 State 157
 
-   45 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop . END
+   49 choices: literals COMMA . choices
 
-    END  shift, and go to state 160
+    INTEGER    shift, and go to state 45
+    REAL       shift, and go to state 46
+    STRING     shift, and go to state 47
+    BOOLEAN    shift, and go to state 115
+    CHARACTER  shift, and go to state 140
+    DOUBLE     shift, and go to state 49
+
+    choices            go to state 163
+    literals           go to state 142
+    integer_literal    go to state 143
+    real_literal       go to state 144
+    string_literal     go to state 145
+    double_literal     go to state 146
+    character_literal  go to state 147
+    boolean_literal    go to state 148
 
 
 State 158
 
-   49 bottom_loop: variant_contracts .
+   50 choices: literals DOTS . literals
 
-    $default  reduce using rule 49 (bottom_loop)
+    INTEGER    shift, and go to state 45
+    REAL       shift, and go to state 46
+    STRING     shift, and go to state 47
+    BOOLEAN    shift, and go to state 115
+    CHARACTER  shift, and go to state 140
+    DOUBLE     shift, and go to state 49
+
+    literals           go to state 164
+    integer_literal    go to state 143
+    real_literal       go to state 144
+    string_literal     go to state 145
+    double_literal     go to state 146
+    character_literal  go to state 147
+    boolean_literal    go to state 148
 
 
 State 159
 
-   68 variant_contracts: VARIANT contracts_expressions .
+   75 contracts_expressions: IDENTIFIER COLON . statement
 
-    $default  reduce using rule 68 (variant_contracts)
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 51
+    NOT         shift, and go to state 52
+
+    statement          go to state 165
+    integer_literal    go to state 54
+    real_literal       go to state 55
+    string_literal     go to state 56
+    double_literal     go to state 57
+    boolean_literal    go to state 58
+    bool_exp           go to state 59
+    bool_term          go to state 60
+    bool_factor        go to state 61
+    bool_node          go to state 62
+    comp_exp           go to state 63
+    arithmetic_exp     go to state 64
+    arithmetic_term    go to state 65
+    arithmetic_factor  go to state 66
 
 
 State 160
 
-   45 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END .
+   51 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement . LOOP code_section bottom_loop END
 
-    $default  reduce using rule 45 (loops)
+    LOOP  shift, and go to state 166
+
+
+State 161
+
+   41 elseif-condition: elseif-condition ELSEIF statement THEN code_section .
+
+    $default  reduce using rule 41 (elseif-condition)
+
+
+State 162
+
+   47 when_part: WHEN choices THEN code_section .
+
+    $default  reduce using rule 47 (when_part)
+
+
+State 163
+
+   49 choices: literals COMMA choices .
+
+    $default  reduce using rule 49 (choices)
+
+
+State 164
+
+   50 choices: literals DOTS literals .
+
+    $default  reduce using rule 50 (choices)
+
+
+State 165
+
+   75 contracts_expressions: IDENTIFIER COLON statement .
+
+    $default  reduce using rule 75 (contracts_expressions)
+
+
+State 166
+
+   51 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP . code_section bottom_loop END
+
+    IDENTIFIER  shift, and go to state 27
+    IF          shift, and go to state 28
+    INSPECT     shift, and go to state 29
+    FROM        shift, and go to state 30
+    PRINT       shift, and go to state 31
+
+    code_section         go to state 167
+    code_section_in      go to state 33
+    print_function       go to state 34
+    condition            go to state 35
+    variable_assignment  go to state 36
+    if-condition         go to state 37
+    inspect_structure    go to state 38
+    loops                go to state 39
+
+
+State 167
+
+   51 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section . bottom_loop END
+
+    VARIANT  shift, and go to state 168
+
+    $default  reduce using rule 54 (bottom_loop)
+
+    bottom_loop        go to state 169
+    variant_contracts  go to state 170
+
+
+State 168
+
+   74 variant_contracts: VARIANT . contracts_expressions
+
+    INTEGER     shift, and go to state 45
+    REAL        shift, and go to state 46
+    STRING      shift, and go to state 47
+    BOOLEAN     shift, and go to state 48
+    DOUBLE      shift, and go to state 49
+    OP          shift, and go to state 50
+    IDENTIFIER  shift, and go to state 149
+    NOT         shift, and go to state 52
+
+    statement              go to state 150
+    integer_literal        go to state 54
+    real_literal           go to state 55
+    string_literal         go to state 56
+    double_literal         go to state 57
+    boolean_literal        go to state 58
+    contracts_expressions  go to state 171
+    bool_exp               go to state 59
+    bool_term              go to state 60
+    bool_factor            go to state 61
+    bool_node              go to state 62
+    comp_exp               go to state 63
+    arithmetic_exp         go to state 64
+    arithmetic_term        go to state 65
+    arithmetic_factor      go to state 66
+
+
+State 169
+
+   51 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop . END
+
+    END  shift, and go to state 172
+
+
+State 170
+
+   55 bottom_loop: variant_contracts .
+
+    $default  reduce using rule 55 (bottom_loop)
+
+
+State 171
+
+   74 variant_contracts: VARIANT contracts_expressions .
+
+    $default  reduce using rule 74 (variant_contracts)
+
+
+State 172
+
+   51 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END .
+
+    $default  reduce using rule 51 (loops)
