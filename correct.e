@@ -13,33 +13,36 @@ class APPLICATION
 		do
 			inspect 2<3
 				when 2 then
-					x: boolean
+					x:=y
 				when 3, 4 then
-					y: real
-					z: real
+					z:=45
 					if 3>5 then 
-						x: real
+						from i := 0
+						until i <= 10
+						loop
+							x := i
+						end
 					else
-						_t: integer
+						_t:=(false or true and t)
 					END
 				when 2..4 then
-					s: real
+					s:=i
 				else
-					s: real
+					s:=x
 			end
-			t: boolean
+			x := (false xor true or true and false)
 		end
 
 	feature
 		n: REAL
 		q: REAL
 		do
-			if 3<4 then
-				x: integer
-			elseif 4<3 then
-				x: boolean
+			if "hello" < "you" then
+				x:=y
+			elseif true = false then
+				x :="hello" 
 			else
-				x: double
+				x:=r
 			end
 			from
 				x:=3
@@ -47,9 +50,9 @@ class APPLICATION
 			until
 				i > 5
 			loop
-				he: boolean
+				he:="yup"
 				if 4<5 then
-					b: boolean
+					b:="no"
 				end
 			end
 
@@ -61,9 +64,9 @@ class APPLICATION
 				i >= 10
 			loop
 				if 3<4 then 
-					x : boolean
+					x := (a+b*(c*d/e)/f-g)
 				else
-					d: real
+					d := (true or false xor (false and true or true) and false)
 				end
 			variant 
 				n < 4

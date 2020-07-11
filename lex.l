@@ -56,6 +56,28 @@ class			{yylval = line; return CLASS;}
 
 create			{yylval = line; return CREATE;}
 
+{integer}				{
+						// printf("%s\n", yytext);
+						addHashUtil(yytext, "Integer", line, col);
+						col += yyleng;
+						yylval = line;
+						return INTEGER;
+					}
+{real}					{
+						// printf("%s\n", yytext);
+						addHashUtil(yytext, "Real No.", line, col);
+						col += yyleng;
+						yylval = line;
+						return REAL;
+					}
+{string}				{
+						// printf("%s\n", yytext);
+						addHashUtil(yytext, "String", line, col);
+						col += yyleng;
+						yylval = line;
+						return STRING;
+					}
+
 do {yylval = line; return DO;}
 
 end {yylval = line; return END;}
@@ -90,6 +112,16 @@ invariant {return INVARIANT;}
 
 when {return WHEN;}
 
+"*" {return MUL;}
+"/" {return DIV;}
+"+" {return ADD;}
+"-" {return SUB;}
+not {return NOT;}
+"true"|"false" {return BOOLEAN;}
+and {return AND;}
+or {return OR;}
+xor {return XOR;}
+
 "<"				{return (LT);}
 ">"				{return (GT);}
 "<="			{return (LTEQ);}
@@ -105,6 +137,7 @@ when {return WHEN;}
 [\(] {yylval = line; return OP;}
 
 [\)] {yylval = line; return CP;}
+[=] {return EQUAL;}
 {keyword}				{
 						// printf("%s\n", yytext);
 						addHashUtil(yytext, "Keyword", line, col);
@@ -135,27 +168,6 @@ when {return WHEN;}
 						col += yyleng;
 						yylval = line;
 						return IDENTIFIER;
-					}
-{integer}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Integer", line, col);
-						col += yyleng;
-						yylval = line;
-						return INTEGER;
-					}
-{real}					{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "Real No.", line, col);
-						col += yyleng;
-						yylval = line;
-						return REAL;
-					}
-{string}				{
-						// printf("%s\n", yytext);
-						addHashUtil(yytext, "String", line, col);
-						col += yyleng;
-						yylval = line;
-						return STRING;
 					}
 {whitespace}				{
 						col += yyleng;

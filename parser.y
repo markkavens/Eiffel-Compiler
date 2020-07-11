@@ -6,6 +6,8 @@
   extern int col;
 %}
 
+%nonassoc shift
+
 %token INTEGER REAL STRING ARRAYED_LIST BOOLEAN CHARACTER DOUBLE
 %token OP CP OSB CSB COLON SEMICOLON EQUAL ASSIGN
 %token REQUIRE ENSURE INVARIANT VARIANT
@@ -14,9 +16,11 @@
 %token DO END
 %token DATATYPE
 %token IF THEN ELSEIF ELSE INSPECT WHEN COMMA
-%token GTEQ LT LTEQ GT NOT
+%token GTEQ LT LTEQ GT
 %token PIPEDOTS DOTS
 %token FROM UNTIL LOOP
+%token ADD SUB MUL DIV
+%token AND OR XOR NOT
 
 %%
 
@@ -53,8 +57,8 @@ inside_function:
                | DO code_section END
 
 container:
-         | container IDENTIFIER if_return SEMICOLON
-         | container IDENTIFIER if_return
+         | IDENTIFIER if_return SEMICOLON container
+         | IDENTIFIER if_return container
          ;
 
 if_return: COLON DATATYPE
@@ -64,13 +68,25 @@ code_section: code_section_in
            | code_section_in code_section
            ;
 
-code_section_in: IDENTIFIER if_return
-               | condition
+code_section_in: condition
                | inspect_structure
                | loops
+               | variable_assignment
                ;
 
 condition: if-condition elseif-condition else-condition END
+         ;
+
+variable_assignments:
+                   | variable_assignments variable_assignment
+                   ;
+
+variable_assignment: IDENTIFIER ASSIGN expr
+                   | IDENTIFIER ASSIGN string_literal
+                   ;
+
+statement: bool_exp
+         | comp_exp
          ;
 
 if-condition: IF statement THEN code_section
@@ -84,7 +100,7 @@ else-condition:
               | ELSE code_section
               ;
 
-inspect_structure: INSPECT statement when_part_list ELSE code_section END
+inspect_structure: INSPECT expr when_part_list ELSE code_section END
                  ;
 
 when_part_list:
@@ -99,13 +115,6 @@ choices: literals
        | literals DOTS literals
        ;
 
-variable_assignments:
-                    | variable_assignments variable_assignment
-                    ;
-
-variable_assignment: IDENTIFIER ASSIGN expr
-                    ;
-
 loops: FROM variable_assignment variable_assignments top_loop UNTIL statement LOOP code_section bottom_loop END
      ;
 
@@ -117,18 +126,19 @@ bottom_loop:
            | variant_contracts
            ;
 
-statement: expr comparison_symbol expr
+/*statement: expr comp_operator expr
          ;
 
 expr: IDENTIFIER
     | literals
-    ;
+    ;*/
 
-comparison_symbol: GT
-                 | GTEQ
-                 | LT
-                 | LTEQ
-                 ;
+comp_operator: GT
+             | GTEQ
+             | LT
+             | LTEQ
+             | EQUAL
+             ;
 
 literals: integer_literal
         | real_literal
@@ -170,6 +180,51 @@ variant_contracts: VARIANT contracts_expressions
 contracts_expressions: IDENTIFIER COLON statement
                      | statement
                      ;
+
+expr: bool_exp
+    | arithmetic_exp
+    | comp_exp
+    ;
+
+bool_exp: bool_exp OR bool_term
+        | bool_term
+        ;
+
+bool_term: bool_term AND bool_factor
+         | bool_factor
+         ;
+
+bool_factor: bool_factor XOR bool_node
+           | bool_node
+           ;
+
+bool_node: IDENTIFIER %prec shift
+         | NOT bool_node
+         | BOOLEAN
+         | OP bool_exp CP
+         ;
+
+comp_exp: arithmetic_exp comp_operator arithmetic_exp
+        | string_literal comp_operator string_literal
+        | boolean_literal EQUAL boolean_literal
+        ;
+
+arithmetic_exp: arithmetic_term
+              | arithmetic_exp ADD arithmetic_term
+              | arithmetic_exp SUB arithmetic_term
+              ;
+
+arithmetic_term: arithmetic_factor
+               | arithmetic_term MUL arithmetic_factor
+               | arithmetic_term DIV arithmetic_factor
+               ;
+
+arithmetic_factor: IDENTIFIER 
+                 |integer_literal
+                 | real_literal
+                 | double_literal
+                 | OP arithmetic_exp CP
+                 ;
 
 %%
 
