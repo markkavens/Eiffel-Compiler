@@ -28,7 +28,7 @@
 %}
 
 keyword					 feature|class|do|end|alias|assign|once|inherit|redefine|if|create|else|require|ensure|local|invariant|Result|then|elseif|old|io.new_line|from|until|loop|across|as|create|NONE|Void|implies|note|description|author|NULL|local|Current|extend|compare_objects|is_empty|out|make
-predefined_types			 INTEGER|STRING|REAL|BOOLEAN|DOUBLE|ARRAYED_LIST|CHARACTER
+predefined_types			 integer|string|real|boolean|double|arrayed_list|character
 identifier				 [a-zA-Z][a-zA-Z0-9\_]*
 zero					 0
 unsignedInteger				 [1-9][0-9]*
@@ -56,24 +56,55 @@ class			{yylval = line; return CLASS;}
 
 create			{yylval = line; return CREATE;}
 
-end				{yylval = line; return END;}
+do {yylval = line; return DO;}
+
+end {yylval = line; return END;}
 
 feature			{yylval = line; return FEATURE;}
 
-"if"			{return (IF);}
+"if"			{return IF;}
 
-"then"			{return (THEN);}
+"then"			{return THEN;}
 
-"else"			{return (ELSE);}
+"else"			{return ELSE;}
 
-"elseif"		{return (ELSEIF);}
+"elseif"		{return ELSEIF;}
 
-"<"				{return (LT);}				
+:= {return ASSIGN;}
+
+from {return FROM;}
+
+until {return UNTIL;}
+
+loop {return LOOP;}
+
+inspect {return INSPECT;}
+
+".." {return DOTS;}
+
+"|..|" {return PIPEDOTS;}
+
+variant {return VARIANT;}
+
+invariant {return INVARIANT;}
+
+when {return WHEN;}
+
+"<"				{return (LT);}
 ">"				{return (GT);}
 "<="			{return (LTEQ);}
 ">="			{return (GTEQ);}
 "~"				{return (NOT);}
 
+"," {return COMMA;}
+
+[:] {yylval = line; return COLON;}
+
+[;] {yylval = line; return SEMICOLON;}
+
+[\(] {yylval = line; return OP;}
+
+[\)] {yylval = line; return CP;}
 {keyword}				{
 						// printf("%s\n", yytext);
 						addHashUtil(yytext, "Keyword", line, col);
@@ -148,9 +179,6 @@ feature			{yylval = line; return FEATURE;}
 					}
 [\.]					{
 						col += yyleng;
-					}
-[:]					{
-							return COLON;
 					}
 %%
 

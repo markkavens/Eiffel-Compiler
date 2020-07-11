@@ -1,14 +1,14 @@
-class APPLICATION
+class application
 	create
 		make1
 	feature
-		i: STRING
-		j: INTEGER
-		k: REAL
+		i: string
+		j: integer
+		k: real
 
 	feature
-		l: STRING
-		m: INTEGER
+		l: string
+		m: integer
 		func:boolean
 		do
 			inspect 2<3
@@ -21,7 +21,7 @@ class APPLICATION
 						x: real
 					else
 						_t: integer
-					END
+					end
 				when 2..4 then
 					s: real
 				else
@@ -31,8 +31,8 @@ class APPLICATION
 		end
 
 	feature
-		n: REAL
-		q: REAL
+		n: real
+		q: real
 		do
 			if 3<4 then
 				x: integer
@@ -43,6 +43,7 @@ class APPLICATION
 			end
 			from
 				x:=3
+				x:=h
 			until
 				i > 5
 			loop
@@ -52,7 +53,7 @@ class APPLICATION
 				end
 			end
 
-			frm x:=3
+			from x:=3
 				x:=h
 			invariant
 				x > 6
