@@ -32,9 +32,8 @@ predefined_types			 			integer|string|real|boolean|double|arrayed_list|character
 identifier								[a-zA-Z][a-zA-Z0-9\_]*
 zero									0
 unsignedInteger				 			[1-9][0-9]*
-signedInteger				 			([-]|[+]){unsignedInteger}
-integer									(([-]|[+])?{zero}|{unsignedInteger}|{signedInteger})
-real					 				((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)
+integer									({zero}|{unsignedInteger})
+real					 				{integer}|(integer\.?[0-9]+)
 text									[^[\"]]
 string					 				\"(\\.|[^"\\])*\"
 newline					 				\n

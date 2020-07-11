@@ -154,9 +154,11 @@ literals: integer_literal
         | boolean_literal
 
 integer_literal: INTEGER
+               | SUB INTEGER
                ;
 
 real_literal: REAL
+            | SUB REAL
             ;
 
 string_literal: STRING
@@ -230,6 +232,7 @@ arithmetic_factor: IDENTIFIER
                  | real_literal
                  | double_literal
                  | OP arithmetic_exp CP
+                 | SUB IDENTIFIER
                  ;
 
 %%
