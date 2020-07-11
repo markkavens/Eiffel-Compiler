@@ -17,6 +17,7 @@
 %token GTEQ LT LTEQ GT NOT
 %token PIPEDOTS DOTS
 %token FROM UNTIL LOOP
+%token AND OR XOR ADD SUB MUL DIV
 
 %%
 
