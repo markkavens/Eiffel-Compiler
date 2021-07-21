@@ -1,11 +1,11 @@
 class PERSON
 
 create
-    make
+    makeq
 
 feature   -- Initialization
     
-    make (n: STRING)
+    makeq (n: STRING;):boolean
         -- Create with name 'n'.
         require
             name_exists: not n.is_empty

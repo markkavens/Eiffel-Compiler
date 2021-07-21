@@ -1,0 +1,128 @@
+program: class_declaration
+       ;
+
+class_declaration: CLASS IDENTIFIER inside_class END
+		 ;
+
+inside_class: create_declaration
+	    | (epsilon)
+	    ;
+
+create_declaration: CREATE IDENTIFIER features_declaration
+		  ;
+
+features_declaration: feature_declaration features_declaration
+		    | (epsilon)
+		    ;
+
+feature_declaration: FEATURE inside_feature
+		   ;
+
+inside_feature: variables_declarations inside_feature
+	      | functions_implemenations inside_feature
+	      | (epsilon)
+	      ;
+	
+functions_implementations: function_implementation functions_implementations
+		         | (epsilon)
+		      	 ;
+
+function_implementation: FUNCTION inside_function
+		       ;
+	
+inside_function: DO --- END
+	       ;
+
+local_declaration: LOCAL variables_declaration
+		 ;
+
+variables_declaration: variable_declaration variables_declaration
+		     | (epsilon)
+		     ;
+
+datatype: INTEGER
+	| REAL
+	| STRING
+	| ARRAYED_LIST[datatype]
+	;
+
+literals: integer_literal
+	| real_literal
+	| string literal
+	;
+
+string_literal: STRING
+	      ;
+
+real_literal: REAL
+	    ;
+
+integer_literal: INTEGER
+	       ;
+
+contracts_declaration: IDENTIFIER COLON expr contracts_sec
+		     | (epsilon)
+		     ;
+
+
+////////////// 
+
+prog:code_part {puts("success");}
+;
+
+code_part:code
+|code code_part
+;
+
+
+code :condition
+|from-until-loop
+|STRING
+;
+
+condition:
+if-condition elseif-condition else-condition END 
+;
+
+if-condition:
+IF statement THEN code_part
+;
+
+elseif-condition:
+|elseif-condition ELSEIF statement THEN code_part 
+;
+
+else-condition:
+|ELSE code_part
+;
+
+
+statement:
+IDENTIFIER comparison_symbol IDENTIFIER
+|IDENTIFIER comparison_symbol literal 
+|literal comparison_symbol IDENTIFIER
+|literal comparison_symbol literal
+|literal
+;
+
+comparison_symbol:GT
+|GTEQ
+|LT
+|LTEQ
+;
+
+literal: 
+INTEGER
+|REAL
+|STRING
+;
+
+from-until-loop:FROM variables_assignment UNTIL statement LOOP code_part END
+;
+
+variables_assignment:variable_assignment
+| variables_assignment variable_assignment
+;
+
+variable_assignment:IDENTIFIER COLON EQUAL statement
+;
